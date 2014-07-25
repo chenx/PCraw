@@ -492,7 +492,7 @@ Usage: perl $0 $OPT_URL_START_S <url_start> [$OPT_URL_ROOT_S <url_root>] [-dfghi
     --max-size: max file size to download, in bytes. 0 means infinite.
     --number-crawl: same as -t
     --overwrite: same as -o
-    --plain-txt-only: same as -p
+    --parse-html: same as -p
     --referer-default: same as -e
     --static-only: same as -s
     --url-root: same as -r
