@@ -7,6 +7,9 @@ A web crawler written in Perl.
 About the Crawling
 ==================
 
+PCraw simulates a Firefox browser that accepts cookie. The downloaded files are stored locally in a folder ./download/&lt;local_root&gt;.  The value of local_root is obtained from url_root (see below).
+
+
 For each download task, at least 1 of 2 parameters below is needed:
 
 1) url_root. This can be provided using the -r switch. Unless the global crawl option -g or 
@@ -17,9 +20,7 @@ not provided, then it uses the domain name part of url_start.
 If its value is not provided, it uses url_root as its value.
 
 
-PCraw simulates a Firefox browser that accepts cookie. The downloaded files are stored locally in a folder ./download/<local_root>. Local_root is obtained from the value of url_root.
-
-The options include:
+The other options include:
 
 - For local storage, either create hierachical directory structure (under local_root) the same as the url path, or use flat directory (all files under local_root).  
 - Only crawl files under url_root (and under such case, whether to download files not under url_root but directly linked to by files under url_root), or can crawl globally without limit.
