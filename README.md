@@ -151,13 +151,7 @@ Note in 1) we have mentioned each url appears twice, with the same values but di
 
 
 
-Author
-======
-X. Chen &lt;chenx at hawaii dot edu&gt;  
-Copyright (C) 2014
-
-
-License
-=======
-
-Apache/BSD/MIT/GPL
+======================
+Author: X. Chen
+Since: 2014
+License: Apache/MIT/BSD/GPL
