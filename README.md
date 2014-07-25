@@ -7,7 +7,7 @@ A web crawler written in Perl.
 About the Crawling
 ==================
 
-When used for the first time, it creates a local repository 
+When used for the first time, PCraw creates a local repository 
 ./download/ under the same directory. 
 For each download task, a sub directory derived from the url_root 
 (see below) will be created, and all downloads are stored there. 
@@ -16,18 +16,17 @@ A log file pcraw.log is created under the same directory.
 
 A cookie file pcrawl_cookie.txt is created under the same directory.
 
-For each download task, at least 2 parameters are needed:
+For each download task, at least 1 of 2 parameters below is needed:
 
-1) url_root. Unless the global crawl option -g or --global-crawl
-is specified, only files under this url will be downloaded.
-This can be provided using the -r switch. If its value is not
-provided, then it uses the domain name part of url_start.
+1) url_root. This can be provided using the -r switch. Unless the global crawl option -g or 
+--global-crawl is specified, only files under this url will be downloaded. If its value is 
+not provided, then it uses the domain name part of url_start.
 
-2) url_start. This is the url where the crawling starts from. 
+2) url_start. This can be provided using the -u switch. This is the url where the crawling starts from. 
 If its value is not provided, it uses url_root as its value.
-This can be provided using the -u switch.
 
-It uses log files to keep track of crawling progress, so if a crawling session is broken, next time starting the crawling again it can pick up from the broken point. It does this by using the following log files stored under local_root (where the downloaded files are stored). When PCraw starts, it always first read in values from these 3 logs.
+
+PCraw uses log files to keep track of crawling progress. If a crawling session is broken, next time starting the crawling  it can pick up from the broken point. It does this by using the following log files stored under local_root (where the downloaded files are stored). When PCraw starts, it first read in values from these 3 logs.
 
 1) .pcraw_lnk_found.log. This stores hash array of the form: url => crawl_depth. The url here can be html files, or any other type of files, like images, audio, video, applications.  The absolute value of crawl_depth is how many levels away from the starting url. If crawl_depth is negative, then the url has not finished crawling; if crawl_depth is positive, then the url has finished crawling. In this log, each url that has been crawled always appear twice: first with negative value, then with positive value (the absolute value is the same, just sign is different). It may appear once with negative value if the file has not been crawled. Note this is similar to the UPDATE operation in a database. Here since we don't use a database, instead write sequentially, we do it this way which essentially is the same as UPDATE. This UPDATE is achieved when PCraw read the entire log at start.
 
