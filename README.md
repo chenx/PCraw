@@ -60,8 +60,8 @@ Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-dfghilmoprstuvw]
     -i: download non-text files outside the url_root. Used when some files are stored outside the url_root.  
     -l: max levels to crawl. Default to 0, 0 means inifinite.  
     -m: file mime type. Only files with given mime types are downloaded.  
-...        text - 0x1  
----        image - 0x2  
+        text - 0x1  
+        image - 0x2  
         audio - 0x4  
         video - 0x8  
         application - 0x10  
