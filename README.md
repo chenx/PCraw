@@ -7,18 +7,30 @@ A web crawler written in Perl.
 About the Crawling
 ==================
 
-PCraw simulates a Firefox browser that accepts cookie. The options include:
+For each download task, at least 1 of 2 parameters below is needed:
 
-- for local storage, either create hierachical directory structure (under local_root) the same as the url path, or use flat directory (all files under local_root).  
-- only crawl files under url_root (and under such case, whether to download files not under url_root but directly linked to by files under url_root), or can crawl globally without limit.
-- specify the max level to crawl, starting from url_start
-- specify the max number of html files to crawl, starting from url_start. Note a html file can include many files of different types, here it is the html files number count.
-- specify the mime type of files to be downloaded. The mime types are specified using OR'd values of 1,2,4,8,.... See more in Usage section.
-- specify the min and max file size to download. This applies only to non-html files. HTML files are always downloaded and parsed for links.
-- whether to overwrite a previous crawl. If not overwrite, it starts from the broken point of the previous crawling session; if overwrite, it starts over again.
-- specify the wait interval, between crawling each html file, and between crawling each links on the same html file. The default values are 5 seconds for the first, and 1 second for the second.
-- specify whether include dynamic html page (e.g., http://a.com/b.php?c=d), or only include static html files.
-- specify the default referer url. In general all links on a html file use that html url as referer. But at the very beginning the first html file will not have a referer, so specify one here. 
+1) url_root. This can be provided using the -r switch. Unless the global crawl option -g or 
+--global-crawl is specified, only files under this url will be downloaded. If its value is 
+not provided, then it uses the domain name part of url_start.
+
+2) url_start. This can be provided using the -u switch. This is the url where the crawling starts from. 
+If its value is not provided, it uses url_root as its value.
+
+
+PCraw simulates a Firefox browser that accepts cookie. The downloaded files are stored locally in a folder ./download/<local_root>. Local_root is obtained from the value of url_root.
+
+The options include:
+
+- For local storage, either create hierachical directory structure (under local_root) the same as the url path, or use flat directory (all files under local_root).  
+- Only crawl files under url_root (and under such case, whether to download files not under url_root but directly linked to by files under url_root), or can crawl globally without limit.
+- Specify the max level to crawl, starting from url_start
+- Specify the max number of html files to crawl, starting from url_start. Note a html file can include many files of different types, here it is the html files number count.
+- Specify the mime type of files to be downloaded. The mime types are specified using OR'd values of 1,2,4,8,.... See more in Usage section.
+- Specify the min and max file size to download. This applies only to non-html files. HTML files are always downloaded and parsed for links.
+- Whether to overwrite a previous crawl. If not overwrite, it starts from the broken point of the previous crawling session; if overwrite, it starts over again.
+- Specify the wait interval, between crawling each html file, and between crawling each links on the same html file. The default values are 5 seconds for the first, and 1 second for the second.
+- Specify whether include dynamic html page (e.g., http://a.com/b.php?c=d), or only include static html files.
+- Specify the default referer url. In general all links on a html file use that html url as referer. But at the very beginning the first html file will not have a referer, so specify one here. 
  
 
 
@@ -125,16 +137,6 @@ For each download task, a sub directory derived from the url_root
 A log file pcraw.log is created under the same directory.  
 
 A cookie file pcrawl_cookie.txt is created under the same directory.
-
-For each download task, at least 1 of 2 parameters below is needed:
-
-1) url_root. This can be provided using the -r switch. Unless the global crawl option -g or 
---global-crawl is specified, only files under this url will be downloaded. If its value is 
-not provided, then it uses the domain name part of url_start.
-
-2) url_start. This can be provided using the -u switch. This is the url where the crawling starts from. 
-If its value is not provided, it uses url_root as its value.
-
 
 PCraw uses log files to keep track of crawling progress. If a crawling session is broken, next time starting the crawling  it can pick up from the broken point. It does this by using the following log files stored under local_root (where the downloaded files are stored). When PCraw starts, it first read in values from these 3 logs.
 
