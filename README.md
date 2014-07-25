@@ -50,8 +50,8 @@ Usage
 Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-dfghilmoprstuvw]
 
   Options (short format):  
-    -c: wait time (seconds) before crawling next html page.  
-    -d: debug, print debug information.  
+...-c: wait time (seconds) before crawling next html page.  
+...-d: debug, print debug information.  
     -e: default referer when crawling a url, if none exists.  
         This is used when crawling the first page, when no referer exists yet.  
     -f: use flat local path: only one level under local root.  
