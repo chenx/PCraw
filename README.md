@@ -153,5 +153,5 @@ Note in 1) we have mentioned each url appears twice, with the same values but di
 
 ======================
 Author: X. Chen  
-Since: 2014  
+Copyright (C) 2014  
 License: Apache/MIT/BSD/GPL  
