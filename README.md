@@ -4,8 +4,8 @@ PCraw
 A web crawler written in Perl.
 
 
-Introduction
-============
+About the Crawling
+==================
 
 When used for the first time, it creates a local repository 
 ./download/ under the same directory. 
@@ -38,6 +38,13 @@ It uses log files to keep track of crawling progress, so if a crawling session i
 2) and 3) are specific to each url_start, they together can track the crawling progress, and make resuming crawl from broken point possible. Note the local_root is created using the value of url_root, under the same url_root there can be different url_start to start crawling from. 1) is global to the entire local_root, such that all the files crawled (no mater html or other types) under url_root are recorded. This way, even if starting from different url_start, the same files can avoid being downloaded again.
 
 Note in 1) we have mentioned each url appear twice, with the same values but different sign, to label the start and finish of crawling of the url. This is no longer true in the case of using different url_start (but same url_root) in multiple crawling. When a different url_start is used to start another crawling, it will add new entries about a previously crawled url with different value, the value is the crawl depth of the url in the new crawling session. This should not cause any interference: if a url's value is negative, then it's always picked up for crawling; otherwise if the url's value is positive, it will not be included in the current crawling; the absolute value matters only for the current crawling session and it has been set correctly.
+
+
+About the Parsing
+=================
+
+Parsing of HTML is done by PParse.pm. It extracts text (without tags) and stores in an internal array, and if specified, output the extracted text in a file pparse_out.txt. User can do his own work on the output file.
+
 
 Usage
 =====
