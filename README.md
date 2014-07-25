@@ -17,7 +17,7 @@ For each download task, at least 1 of 2 parameters below is needed:
 not provided, then it uses the domain name part of url_start.
 
 2) url_start. This can be provided using the -u switch. This is the url where the crawling starts from. 
-If its value is not provided, it uses url_root as its value.
+If its value is not provided, it uses url_root as its value.  The reason to use another parameter url_start in addition to url_root is because under the same url_root one can start from different pages. With 2 parameters it is also easy to specify different sub-parts of a domain to crawl.
 
 
 The other options include:
