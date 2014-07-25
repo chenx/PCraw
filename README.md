@@ -95,7 +95,7 @@ Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-dfghilmoprstuvw]
     --max-size: max file size to download, in bytes. 0 means infinite.  
     --number-crawl: same as -t  
     --overwrite: same as -o  
-    --plain-txt-only: same as -p  
+    --parse-html: same as -p  
     --referer-default: same as -e  
     --static-only: same as -s  
     --url-root: same as -r  
