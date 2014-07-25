@@ -25,7 +25,7 @@ The other options include:
 - For local storage, either create hierachical directory structure (under local_root) the same as the url path, or use flat directory structure (all files under local_root). When flat directory structure is used, files with the same names coming from different folders will be named differently to avoid conflict, e.g., file1.txt, file1_(2).txt, file1_(3).txt ...).  
 - Only crawl files under url_root (and under such case, whether to download files not under url_root but directly linked to by files under url_root), or can crawl globally without limit.
 - Specify the max level to crawl, starting from url_start
-- Specify the max number of html files to crawl, starting from url_start. Note a html file can include many files of different types, here it is the html files number count.
+- Specify the max number of html files to crawl, starting from url_start. Note a html file can include many files of different types, here it is about the number of html files.
 - Specify the mime type of files to be downloaded. The mime types are specified using OR'd values of 1,2,4,8,.... See more in Usage section.
 - Specify the min and max file size to download. This applies only to non-html files. HTML files are always downloaded and parsed for links.
 - Whether to overwrite a previous crawl. If not overwrite, it starts from the broken point of the previous crawling session; if overwrite, it starts over again.
@@ -40,7 +40,7 @@ See Usage section for the command line option switches.
 About the Parsing
 =================
 
-Parsing of HTML is done by PParse.pm. It extracts text (without tags) and stores in an internal array, and if specified, output the extracted text in a file pparse_out.txt. User can do his own work on the output file.
+Parsing of HTML is done by PParse.pm. It extracts text (without tags) and stores in an internal array, and if specified, output the extracted text to a file pparse_out.txt. User can do his own work on the output file.
 
 
 
@@ -57,8 +57,7 @@ Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-dfghilmoprstuvw]
     -f: use flat local path: only one level under local root.  
     -g: allow global crawl outside url_root.  
     -h: print this help message.  
-    -i: download non-text files outside the url_root.  
-        Used when files are stored outside the url_root.  
+    -i: download non-text files outside the url_root. Used when some files are stored outside the url_root.  
     -l: max levels to crawl. Default to 0, 0 means inifinite.  
     -m: file mime type. Only files with given mime types are downloaded.  
         text - 0x1  
@@ -76,12 +75,9 @@ Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-dfghilmoprstuvw]
     -n <number_of_links>: the number of links to crawl. 0 means inifinite.  
     -o: overwrite previous download result.  
     -p: parse html. So far just print out text without tags.  
-    -r <url_root>: root url.  
-        Only files under this path are downloaded. Except when -o is used.  
-    -s: only download static pages.   
-        Dynamic pages with parameters like http://a.php?a=b are ignored.  
-    -u <url_start>: start url.  
-        This is where a crawling task starts from.  
+    -r <url_root>: root url. Only files under this path are downloaded. Except when -o is used.  
+    -s: only download static pages. Dynamic pages with parameters like http://a.php?a=b are ignored.  
+    -u <url_start>: start url. This is where a crawling task starts from.  
     -v: show version information.  
     -w: wait time (seconds) before getting next url. Difference of this   
         with -c is: on each html page, there can be several urls. -c is  
@@ -127,8 +123,8 @@ Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-dfghilmoprstuvw]
   
 
 
-Internals Implementations
-=========================
+Implementation Internal
+=======================
 
 This section shortly gives some details of implementation for interested users.
 
