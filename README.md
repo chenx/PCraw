@@ -123,8 +123,8 @@ Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-dfghilmoprstuvw]
   
 
 
-Implementation Internal
-=======================
+Implementation Internals
+========================
 
 This section shortly gives some details of implementation for interested users.
 
@@ -149,3 +149,15 @@ PCraw uses log files to keep track of crawling progress. If a crawling session i
 
 Note in 1) we have mentioned each url appears twice, with the same values but different sign, to label the start and finish of crawling the url. This is no longer true in the case of using different url_start (but same url_root) in multiple crawling. When a different url_start is used to start another crawling, it will add new entries about a previously crawled url with different value, the value is the crawl depth of the url in the new crawling session. This should not cause any interference: if a url's value is negative, then it's always picked up for crawling; otherwise if the url's value is positive, it will not be included in the current crawling; the absolute value matters only for the current crawling session and it has been set correctly.
 
+
+
+Author
+======
+X. Chen &lt;chenx at hawaii dot edu&gt;  
+Copyright (C) 2014
+
+
+License
+=======
+
+Apache/BSD/MIT/GPL
