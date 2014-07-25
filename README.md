@@ -27,6 +27,17 @@ provided, then it uses the domain name part of url_start.
 If its value is not provided, it uses url_root as its value.
 This can be provided using the -u switch.
 
+It uses log files to keep track of crawling progress, so if a crawling session is broken, next time starting the crawling again it can pick up from the broken point. It does this by using the following log files stored under local_root (where the downloaded files are stored). When PCraw starts, it always first read in values from these 3 logs.
+
+1) .pcraw_lnk_found.log. This stores hash array of the form: url => crawl_depth. The url here can be html files, or any other type of files, like images, audio, video, applications.  The absolute value of crawl_depth is how many levels away from the starting url. If crawl_depth is negative, then the url has not finished crawling; if crawl_depth is positive, then the url has finished crawling. In this log, each url that has been crawled always appear twice: first with negative value, then with positive value (the absolute value is the same, just sign is different). It may appear once with negative value if the file has not been crawled. Note this is similar to the UPDATE operation in a database. Here since we don't use a database, instead write sequentially, we do it this way which essentially is the same as UPDATE. This UPDATE is achieved when PCraw read the entire log at start.
+
+2) .pcraw_[url_start filename]_lnk_Q.log. This stores the array of html links to crawl. Only crawlable html files are stored here.
+
+3) .pcraw_[url_start filename]_lnk_Q_ID.log. This stores the index of current html link being crawled in 2).
+
+2) and 3) are specific to each url_start, they together can track the crawling progress, and make resuming crawl from broken point possible. Note the local_root is created using the value of url_root, under the same url_root there can be different url_start to start crawling from. 1) is global to the entire local_root, such that all the files crawled (no mater html or other types) under url_root are recorded. This way, even if starting from different url_start, the same files can avoid being downloaded again.
+
+Note in 1) we have mentioned each url appear twice, with the same values but different sign, to label the start and finish of crawling of the url. This is no longer true in the case of using different url_start (but same url_root) in multiple crawling. When a different url_start is used to start another crawling, it will add new entries about a previously crawled url with different value, the value is the crawl depth of the url in the new crawling session. This should not cause any interference: if a url's value is negative, then it's always picked up for crawling; otherwise if the url's value is positive, it will not be included in the current crawling; the absolute value matters only for the current crawling session and it has been set correctly.
 
 Usage
 =====
