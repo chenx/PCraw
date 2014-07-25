@@ -17,12 +17,12 @@ For each download task, at least 1 of 2 parameters below is needed:
 not provided, then it uses the domain name part of url_start.
 
 2) url_start. This can be provided using the -u switch. This is the url where the crawling starts from. 
-If its value is not provided, it uses url_root as its value.  The reason to use another parameter url_start in addition to url_root is because under the same url_root one can start from different pages. With 2 parameters it is also easy to specify different sub-parts of a domain to crawl.
+If its value is not provided, it uses url_root as its value.  The reason to use another parameter url_start in addition to url_root is because under the same url_root one can start from different pages. With 2 parameters it is also easy to specify different sub portions of a domain to crawl.
 
 
 The other options include:
 
-- For local storage, either create hierachical directory structure (under local_root) the same as the url path, or use flat directory (all files under local_root).  
+- For local storage, either create hierachical directory structure (under local_root) the same as the url path, or use flat directory structure (all files under local_root). When flat directory structure is used, files with the same names coming from different folders will be named differently to avoid conflict, e.g., file1.txt, file1_(2).txt, file1_(3).txt ...).  
 - Only crawl files under url_root (and under such case, whether to download files not under url_root but directly linked to by files under url_root), or can crawl globally without limit.
 - Specify the max level to crawl, starting from url_start
 - Specify the max number of html files to crawl, starting from url_start. Note a html file can include many files of different types, here it is the html files number count.
@@ -33,6 +33,8 @@ The other options include:
 - Specify whether include dynamic html page (e.g., http://a.com/b.php?c=d), or only include static html files.
 - Specify the default referer url. In general all links on a html file use that html url as referer. But at the very beginning the first html file will not have a referer, so specify one here. 
  
+See Usage section for the command line option switches.
+
 
 
 About the Parsing
@@ -125,8 +127,8 @@ Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-dfghilmoprstuvw]
   
 
 
-Internals of PCraw
-==================
+Internals Implementations
+=========================
 
 This section shortly gives some details of implementation for interested users.
 
