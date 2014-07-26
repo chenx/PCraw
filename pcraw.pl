@@ -665,7 +665,7 @@ sub getSite() {
   &logLastUrlStart(); # log which url_start this run uses.
   open LOG_Lnk_Found, ">> " . &getLnkFoundLog();
   open LOG_Lnk_Queue, ">> " . &getLnkQueueLog();
-  open LOG_Lnk_Queue_Index, "> " . &getLnkQueueIndexLog();
+  #open LOG_Lnk_Queue_Index, "> " . &getLnkQueueIndexLog();
 
   if (! $history_exist) {
     #print "::$url_start\n";
@@ -680,7 +680,7 @@ sub getSite() {
 
   &doCrawl();
   
-  close LOG_Lnk_Queue_Index;
+  #close LOG_Lnk_Queue_Index;
   close LOG_Lnk_Queue;
   close LOG_Lnk_Found;
   
@@ -1726,8 +1726,9 @@ sub logLnkQueue() {
 
 sub logLnkQueueIndex() {
   my ($msg) = @_;
+  open LOG_Lnk_Queue_Index, "> " . &getLnkQueueIndexLog();
   print LOG_Lnk_Queue_Index ("$msg\n");
-  LOG_Lnk_Queue_Index->autoflush;
+  close LOG_Lnk_Queue_Index;
 }
 
 sub logLastUrlStart() {
