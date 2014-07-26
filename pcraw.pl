@@ -52,7 +52,7 @@ For each download task, at least 2 parameters are needed:
 1) url_root. Unless the global crawl option -g or --global-crawl
 is specified, only files under this url will be downloaded.
 This can be provided using the -r switch. If its value is not
-provided, then it uses the longest path (without filename) of url_start.
+provided, then it uses the longest path in url_start.
 
 2) url_start. This is the url where the crawling starts from. 
 If its value is not provided, it uses url_root as its value.
