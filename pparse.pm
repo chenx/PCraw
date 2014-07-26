@@ -128,6 +128,7 @@ sub text {
   # Must first trim, then chomp.
   $text = &trim( $text );
   chomp($text);
+  $text = &trim( $text );
     
   if ($text ne "") { 
     if ($DEBUG) { print ": $text\n"; }
