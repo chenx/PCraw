@@ -81,9 +81,7 @@ Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-cdefghilmoprsuvw]
     -s: only download static pages. Dynamic pages with parameters like http://a.php?a=b are ignored.  
     -u <url_start>: start url. This is where a crawling task starts from.  
     -v: show version information.  
-    -w: wait time (seconds) before getting next url. Difference of this   
-        with -c is: on each html page, there can be several urls. -c is  
-        for each html page, -w is for each url.  
+    -w: wait time (seconds) before getting next url. Difference of this with -c is: on each html page, there can be several urls. -c is for each html page, -w is for each url.  
 
   Options (long format):  
     --debug: same as -d  
