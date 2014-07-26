@@ -59,7 +59,7 @@ Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-cdefghilmoprsuvw]
     -g: allow global crawl outside url_root.  
     -h: print this help message.  
     -i: download non-text files outside the url_root. Value is on(1)/off(0). Default is on.
-        Used when some linked files are stored outside the url_root.
+        Used when some linked files are stored outside the url_root.    
     -l: max levels to crawl. Default to 0, 0 means inifinite.  
     -m: file mime type. Only files with given mime types are downloaded. E.g., to download text and image files, use 0x1 | 0x2 = 3.  
         text  - 0x1 = 1  
