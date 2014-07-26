@@ -52,7 +52,7 @@ For each download task, at least 2 parameters are needed:
 1) url_root. Unless the global crawl option -g or --global-crawl
 is specified, only files under this url will be downloaded.
 This can be provided using the -r switch. If its value is not
-provided, then it uses the domain name part of url_start.
+provided, then it uses the longest path (without filename) of url_start.
 
 2) url_start. This is the url where the crawling starts from. 
 If its value is not provided, it uses url_root as its value.
@@ -295,10 +295,17 @@ MAIN: if (1) {
 ######################################################
 
 
+#
+# Use the longest possible path as root.
+#
 sub getUrlRootFromUrlStart() {
-  my $f = &getDomain($url_start);
-  $f = "http://$f/";
+  my $f = &getUrlPath($url_start); 
+
+  # This uses the domain name, too broad, so don't use this.
+  #my $f = &getDomain($url_start);
+  #$f = "http://$f/";
   #print "url_root: $f\n";
+
   return $f;
 }
 
@@ -1697,6 +1704,23 @@ sub getFilename() {
 
 
 #
+# Given a url, return the path without filename.
+#
+sub getUrlPath() {
+  my ($path) = @_;
+
+  # if $path ends with "/", just return it.
+  if ($path =~ m/\/$/) { return $path; }
+
+  # else, remove the filename path and return the rest.
+  my $file = &getFilename($path);
+  $path =~ s/$file$//;
+
+  return $path;
+}
+
+
+#
 # Print to both STDOUT and log file.
 #
 sub output {
@@ -1771,6 +1795,14 @@ sub getCustomLinks() {
 # - change -V from on/off to value based, to allow msg at
 #   different levels. At level 1 the msg is the same as before,
 #   at level 2 message is about new_link reject/ignore reason.
+# - Change default of url_root when it's not given: previously
+#   use domain name of url_start, now use the longest path of url_start.
+# - for -i, now default is 1.
+# - For overwrite -o, now move the previous folder to folder-2,
+#   instead of delete.
+# - Added -p option to mkdir, so intermediate path can be generated.
+# - Fixed small bug with log_.._lnk_Q_ID.log, so only one value
+#   is logged, instead of all.
 #
 # 7/24/2014
 # - Now in getFileHeader(), can get all response fields.
