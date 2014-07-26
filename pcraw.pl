@@ -913,12 +913,12 @@ sub doCrawl() {
         }
         else {
           if (! &mimeTypeMatch($content_type)) { # from getFileHeader().
-	        if ($verbose & 2) { print "* ignore (type_mismatch): $new_url\n"; }    
+            if ($verbose & 2) { print "* ignore (type_mismatch): $new_url\n"; }    
           }
           elsif (! &fileSizeMatch($content_size)) { # from getFileHeader().
-	        if ($verbose & 2) { print "* ignore (size_mismatch): $new_url\n"; }    
-	      }
-	      else {
+            if ($verbose & 2) { print "* ignore (size_mismatch): $new_url\n"; }    
+          }
+          else {
             #print "add to non-link Q, and save: $new_url\n";
             $resource_download_ct += 1;
             output ("file #$resource_download_ct: $new_url");
@@ -1362,10 +1362,10 @@ sub isWantedFile() {
 sub getRejectReason() {
   my ($code) = @_;
   my $msg;
-  if ($code == -1) { $msg = "is_crawled"; }	
-  elsif ($code == -2) { $msg = "is_dynamic"; }	
-  elsif ($code == -3) { $msg = "header_code: $header_code"; }	
-  elsif ($code == -4) { $msg = "outside_domain"; }	
+  if ($code == -1) { $msg = "is_crawled"; }    
+  elsif ($code == -2) { $msg = "is_dynamic"; }    
+  elsif ($code == -3) { $msg = "header_code: $header_code"; }    
+  elsif ($code == -4) { $msg = "outside_domain"; }    
   else { $msg = "unknown"; }
   
   return $msg;
