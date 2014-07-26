@@ -90,11 +90,10 @@ use base "HTML::Parser";
 # Definition of global variables.
 ######################################################
 
-my $DEBUG = 0;
-
-my $OUTFILE = "pparse_out.txt";
-my $log_outfile = 0;
-my $filename = "File"; # name of the html file to parse.
+my $DEBUG = 0;         # Used for development/debug only.
+my $OUTFILE = "pparse_out.txt"; # Output file, store parse result.
+my $log_outfile = 0;   # If 1, write parse result to output file.
+my $filename = "File"; # Default name for the html file to parse.
 
 #
 # Store all the texts in this array.
