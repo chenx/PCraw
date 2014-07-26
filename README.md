@@ -32,7 +32,7 @@ The other options include:
 - Specify the wait interval, between crawling each html file, and between crawling each links on the same html file. The default values are 5 seconds for the first, and 1 second for the second.
 - Specify whether include dynamic html page (e.g., http://a.com/b.php?c=d), or only include static html files.
 - Specify the default referer url. In general all links on a html file use that html url as referer. But at the very beginning the first html file will not have a referer, so specify one here. 
-- Specify verbose mode for more details on crawling. Verbose mode 1 will output downloaded files' type and size; verbose mode 2 will output reason if a url is rejected or ignored. To output both, use 3.
+- Specify verbose mode for more details on crawling. Verbose mode 1 will output size and type of downloaded files; verbose mode 2 will output reason if a url is rejected or ignored. To output both, use 3.
  
 See Usage section for the command line option switches.
 
