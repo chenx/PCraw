@@ -606,8 +606,7 @@ sub getQueueLogName() {
 #
 sub createLocalRepos() {
   if (! (-d $local_repos)) { 
-    &execCmd("mkdir -p \"$local_repos\"");
-    if (! (-d $local_repos)) { 
+    if (! &createPath($local_repos)) {
       output("Cannot create local repository: $local_repos");
       die(); 
     }
@@ -659,8 +658,7 @@ sub getSite() {
   if ($overwrite && -d $local_root) { clearHistory(); }
 
   if (! (-d $local_root)) { 
-    &execCmd("mkdir -p \"$local_root\"");
-    if (! (-d $local_root)) { 
+    if (! &createPath($local_root)) {
       output("Abort. Cannot create local root: $local_root");
       return; # return instead of die(), to close LOGFILE handle.
     }
@@ -890,7 +888,6 @@ sub doCrawl() {
     if (&mimeTypeMatch("text") && &fileSizeMatch($content_len)) {
       &saveContent($url, $contents, $content_type, $content_len);
     }
-    &clearProgressBar();
    
     if ($parse_html) { &parseHtml($url, $contents); } # Parse html.
    
@@ -937,7 +934,6 @@ sub doCrawl() {
             my $content = &getUrl($new_url, $browser, $url);            
             my $content_len = length($content);
             &saveContent($new_url, $content, $content_type, $content_len);
-            &clearProgressBar();
           }
         }
       }
@@ -1457,6 +1453,8 @@ sub saveContent() {
   }
   if ($content_len <= 0) { return; }
   $download_bytes += $content_len; # public variable for total download size.
+
+  &clearProgressBar();
               
   my $filename = getFilename($url);
   #print "saveContent(). url = $url, filename = $filename\n"  ;
@@ -1680,11 +1678,12 @@ sub encodePath() {
 
 sub createPath() {
   my ($path) = @_;
-  if (! (-d $path)) {
-    #mkdir ($path, 0700);
-    &execCmd("mkdir -p \"$path\"");
-    #if ($DEBUG) { print "create directory: $path\n"; }
-  }  
+  if (-d $path) { return 1; }
+
+  #mkdir ($path, 0700);
+  &execCmd("mkdir -p \"$path\"");
+  if (! -d $path) { return 0; }
+  return 1;
 }
 
 #
