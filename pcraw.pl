@@ -595,7 +595,7 @@ sub getQueueLogName() {
 #
 sub createLocalRepos() {
   if (! (-d $local_repos)) { 
-    &execCmd("mkdir \"$local_repos\"");
+    &execCmd("mkdir -p \"$local_repos\"");
     if (! (-d $local_repos)) { 
       output("Cannot create local repository: $local_repos");
       die(); 
@@ -648,7 +648,7 @@ sub getSite() {
   if ($overwrite && -d $local_root) { clearHistory(); }
 
   if (! (-d $local_root)) { 
-    &execCmd("mkdir \"$local_root\"");
+    &execCmd("mkdir -p \"$local_root\"");
     if (! (-d $local_root)) { 
       output("Abort. Cannot create local root: $local_root");
       return; # return instead of die(), to close LOGFILE handle.
@@ -689,14 +689,13 @@ sub getSite() {
 
 #
 # Overwrite crawl history.
+# Now do this by moving the previous directory to dir_(k), k = 2, 3, ...
 #
 sub clearHistory() {
-  my $file = &getLnkFoundLog(); 
-  if (-e $file) { unlink $file; }
-  $file = &getLnkQueueLog(); 
-  if (-e $file) { unlink $file; }
-  $file = &getLnkQueueIndexLog(); 
-  if (-e $file) { unlink $file; }
+  if (-d $local_root) {
+    #printf "rm -rf $local_root\n";
+    execCmd("mv $local_root " . &resolveConflictDirName($local_root));
+  }
 }
 
 
@@ -889,8 +888,8 @@ sub doCrawl() {
 
     foreach my $new_url (@new_urls) {
       # Remove link anchor like in "http://a.com/a.html#section_1".
-      if ($new_url =~ /\#[a-z0-9\-\_\%]*$/i) { 
-        $new_url =~ s/\#[a-z0-9\-\_\%]*$//i;
+      if ($new_url =~ /\#[a-z0-9\-\_\%\.]*$/i) { 
+        $new_url =~ s/\#[a-z0-9\-\_\%\.]*$//i;
       }
 
       # isWantedFile() calls getFileHeader(), and gets type/size for wanted files.
@@ -1534,6 +1533,30 @@ sub resolveConflictName() {
 
 
 #
+# Similar to resolveConflictName(), but for directory.
+# This is simpler since no need to strip suffix.
+#
+sub resolveConflictDirName() {
+  my ($outfile) = @_;
+
+  my $endChar = "";
+  if ($outfile =~ /\/$/) { 
+    $endChar = "/";
+    $outfile =~ s/\/$//; 
+  } # remove trailing "/" if any.
+
+  my $ct = 2;
+  while (1) {
+    my $outfile = "$outfile\-$ct";
+    if (! -e $outfile) { return $outfile . $endChar; }
+    ++ $ct;
+  }
+
+  return ""; # should never happen.
+}
+
+
+#
 # Get suffix path of a filename.
 #
 sub getFileSuffix() {
@@ -1632,7 +1655,7 @@ sub createPath() {
   my ($path) = @_;
   if (! (-d $path)) {
     #mkdir ($path, 0700);
-    &execCmd("mkdir \"$path\"");
+    &execCmd("mkdir -p \"$path\"");
     #if ($DEBUG) { print "create directory: $path\n"; }
   }  
 }
