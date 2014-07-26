@@ -128,10 +128,10 @@ my @link_queue;         # Store links already crawled.
 my $link_queue_pt = 0;  # pointer in $link_queue.
 my $content_type;       # Content type of a file.
 my $content_size;       # Content size of a file.
+my $header_code;        # Response header code.
 my @non_link_queue;     # Stores links that do not contain urls, e.g., images.
 my $crawl_number = 0;   # Number of pages to crawl. 0 means infinite.
 my $crawl_max_level = 0;# How deep in levels the crawl can go. 0 means ininite.
-my $verbose = 0;        # If 1, print more details to screen and log.
 my $download_bytes;     # Total bytes of downloaded files.
 my $file_min_size = 0;  # Min file size to download.
 my $file_max_size = 0;  # Max file size to download. 0 means infinite.
@@ -146,6 +146,18 @@ my $global_crawl = 0;   # If 1, allow crawl outside $url_root.
 my $referer_default = "http://yahoo.com"; # default referer visiting a page.
 my $parse_html = 0;     # Parse html.
 
+#
+# To get download left time. Used in getUrl() and callback().
+#
+my $callback_t0; 
+
+#
+# If $verbose > 0, print more details to screen and log:
+#   0x1 - print type/size and file download information.
+#   0x2 - print reject/ignore file reason.
+#
+my $verbose = 0;
+                        
 #
 # Some non-text files (such as images) are not under $url_root. 
 # E.g., we want to download files in http://site/people/, 
@@ -226,7 +238,7 @@ my $OPT_PARSE_HTML_S = "-p";
 my $OPT_PARSE_HTML_L = "--parse-html";
 
 #
-# Used by getUrl() function that prints a progress bar.
+# Used by getUrl() to print a progress bar.
 #
 my $total_size; # Total size of a file to download.
 my $final_data; # The content of a downloaded file.
@@ -339,6 +351,10 @@ sub getOptions() {
     elsif ($a eq $OPT_DEFAULT_REFERER_S || $a eq $OPT_DEFAULT_REFERER_L) {
       $state = $OPT_DEFAULT_REFERER_S;
     }
+    elsif ($a eq $OPT_VERBOSE_S || $a eq $OPT_VERBOSE_L) {
+      $verbose = 1; # default verbase level is 1, if no value provided.
+      $state = $OPT_VERBOSE_S;
+    }
     elsif ($a eq $OPT_MIN_SIZE_L) {
       $state = $OPT_MIN_SIZE_L;
     }
@@ -358,9 +374,6 @@ sub getOptions() {
     }
     elsif ($a eq $OPT_DEBUG_S || $a eq $OPT_DEBUG_L) {
       $DEBUG = 1; $state = ""; 
-    }
-    elsif ($a eq $OPT_VERBOSE_S || $a eq $OPT_VERBOSE_L) {
-      $verbose = 1; $state = ""; 
     }
     elsif ($a eq $OPT_FLAT_PATH_S || $a eq $OPT_FLAT_PATH_L) {
       $flat_localpath = 1; $state = "";
@@ -413,6 +426,9 @@ sub getOptions() {
     }
     elsif ($state eq $OPT_DEFAULT_REFERER_S) {
       $referer_default = $a; $state = "";
+    }
+    elsif ($state eq $OPT_VERBOSE_S) {
+      $verbose = getPosInt($a); $state = "";
     }
 
     else { 
@@ -538,9 +554,8 @@ sub showVersion() {
 #
 sub getLogName() {
   my $log = $0;
-  if ($log =~ /\.pl/i) {
-    $log =~ s/\.pl/\.log/i;
-  }
+  if ($log =~ /\.pl/i) { $log =~ s/\.pl/\.log/i; }
+  else { $log .= ".pl"; }
   return $log;
 }
 
@@ -879,7 +894,8 @@ sub doCrawl() {
       }
 
       # isWantedFile() calls getFileHeader(), and gets type/size for wanted files.
-      if ( isWantedFile($new_url, $url) ) {
+      my $isWanted = isWantedFile($new_url, $url);
+      if ( $isWanted == 1 ) {
         #print "::$new_url, $content_type, $content_size\n"; 
         if ($content_type =~ /text\/html/i || $content_type eq "") {
           if (! exists($links_found{$new_url})) {
@@ -896,24 +912,30 @@ sub doCrawl() {
             &logLnkFound("$links_found_ct. $new_url => $links_found{$new_url}");            
           }
         }
-        elsif ( &mimeTypeMatch($content_type) && 
-            &fileSizeMatch($content_size) )  { # size: from getFileHeader().
-          #print "add to non-link Q, and save: $new_url\n";
-          $resource_download_ct += 1;
-          output ("file #$resource_download_ct: $new_url");
-          @non_link_queue = (@non_link_queue, $new_url);
-          my $content = &getUrl($new_url, $browser, $url);            
-          my $content_len = length($content);
-          &saveContent($new_url, $content, $content_type, $content_len);
-          &clearProgressBar();
-        }
-        else { 
-          #print "? $new_url\n"; 
+        else {
+          if (! &mimeTypeMatch($content_type)) { # from getFileHeader().
+	        if ($verbose & 2) { print "* ignore (type_mismatch): $new_url\n"; }    
+          }
+          elsif (! &fileSizeMatch($content_size)) { # from getFileHeader().
+	        if ($verbose & 2) { print "* ignore (size_mismatch): $new_url\n"; }    
+	      }
+	      else {
+            #print "add to non-link Q, and save: $new_url\n";
+            $resource_download_ct += 1;
+            output ("file #$resource_download_ct: $new_url");
+            @non_link_queue = (@non_link_queue, $new_url);
+            my $content = &getUrl($new_url, $browser, $url);            
+            my $content_len = length($content);
+            &saveContent($new_url, $content, $content_type, $content_len);
+            &clearProgressBar();
+          }
         }
       }
       else {
-        #print "NOT wanted link, disgard: $new_url\n";    
         #print "::$new_url, $content_type, $content_size\n";
+        #if (($verbose & 2) && $content_type =~ /text\/html/i) {
+          print "* reject (" . getRejectReason($isWanted) . "): $new_url\n";
+        #}
       }
       
       #print "::$new_url:: $links_found{$new_url}\n";
@@ -1050,10 +1072,11 @@ sub getUrl() {
   $total_size = $content_size // -1;
   #print "getUrl(): size: $total_size\n";
   
+  $callback_t0 = time(); # Download start time.
   # now do the downloading.
   my $request = new HTTP::Request('GET', "$url");
   if ($referer ne "") { $request->referer("$referer"); }
-  my $response = $browser->request($request, \&callback, 4096);
+  my $response = $browser->request($request, \&callback, 8192);
 
   # Replaced with the code above using referer.
   #my $response = $browser->get($url, ':content_cb' => \&callback );
@@ -1062,7 +1085,7 @@ sub getUrl() {
   #print progressBar(-1,01,25,'='); 
   
   # Keep the progress bar, if desired.
-  if ($verbose && $total_size ne -1) { print "\n"; } 
+  #if (($verbose & 1) && $total_size ne -1) { print "\n"; } 
   return $final_data; # File content.
 }
 
@@ -1074,7 +1097,14 @@ sub callback {
    my ($data, $response, $protocol) = @_;
    $final_data .= $data;
    #print "callback: len = " . length($final_data) . "\n";
-   print progressBar( length($final_data), $total_size, 25, '=' ); 
+   
+   my $time_left = 0;
+   my $t_used = time() - $callback_t0; # Time used so far.
+   if ($t_used > 0) {
+     my $cur_size = length($final_data);
+     $time_left = (($total_size - $cur_size) / $cur_size) * $t_used;
+   }
+   print progressBar( length($final_data), $total_size, 25, '=', $time_left ); 
 }
 
 
@@ -1092,8 +1122,9 @@ sub callback {
 # at http://tachyon.perlmonk.org/
 #
 sub progressBar {
-  my ( $got, $total, $width, $char ) = @_;
+  my ( $got, $total, $width, $char, $time_left ) = @_;
   $width ||= 25; $char ||= '-'; # "||=": default to if not defined.
+  $time_left ||= 0;
 
   # Some web servers don't give "content-length" field.
   # In such case don't print progress bar.
@@ -1115,9 +1146,11 @@ sub progressBar {
     sprintf (' ' x 79) . "\r";  
   }
   else {
-    sprintf "|%-${width}s| Got %${num_width}s bytes of %s (%.2f%%)\r", 
+    sprintf 
+      "|%-${width}s| Got %${num_width}s bytes of %s (%.2f%%, %.1fsec)   \r", 
       $char x (($width-1)*$got/$total). '>', 
-      $got, $total, 100*$got/+$total;
+      $got, $total, 100*$got/+$total,
+      $time_left;
   }
 }
 
@@ -1244,6 +1277,8 @@ sub getFileHeader() {
     exit(0);
   }
   
+  $header_code = $result->code() // ""; # response header code.
+  
   if ($result->is_error()) {
     if ($DEBUG) { print "error ($link): code = " . $result->code() . "\n"; }
     return 0;
@@ -1297,15 +1332,16 @@ sub isWantedFile() {
 
   $content_type = "";
   $content_size = 0;
+  $header_code = "";
 
-  if (&linkIsCrawled($link)) { return 0; }
-  if ($static_page_only && $link =~ /\?(\S+=\S*)+$/i) { return 0; }
+  if (&linkIsCrawled($link)) { return -1; }
+  if ($static_page_only && $link =~ /\?(\S+=\S*)+$/i) { return -2; }
 
-  if (! &getFileHeader($link, $referer)) { return 0; }
+  if (! &getFileHeader($link, $referer)) { return -3; }
 
   if (! $global_crawl && ! &isInsideDomain($link)) { 
     if ($get_outside_file && ! ($content_type =~ /^text/i)) { return 1; }
-    return 0; 
+    return -4; 
   } 
 
   # content_size can be null for dynamic pages.
@@ -1320,6 +1356,21 @@ sub isWantedFile() {
   return 1;
 }
 
+
+#
+# Return the reason rejected by isWantedFile().
+#
+sub getRejectReason() {
+  my ($code) = @_;
+  my $msg;
+  if ($code == -1) { $msg = "is_crawled"; }	
+  elsif ($code == -2) { $msg = "is_dynamic"; }	
+  elsif ($code == -3) { $msg = "header_code: $header_code"; }	
+  elsif ($code == -4) { $msg = "outside_domain"; }	
+  else { $msg = "unknown"; }
+  
+  return $msg;
+}
 
 #
 # Get a file's mime sub type.
@@ -1390,7 +1441,10 @@ sub saveContent() {
   my $outfile;
   
   $content_type ||= "";
-  if ($verbose) { output( "  Type: $content_type, Size: $content_len" ); }
+  if ($verbose & 1) { 
+    clearProgressBar();
+    output( "   type: $content_type, Size: $content_len" ); 
+  }
   if ($content_len <= 0) { return; }
   $download_bytes += $content_len; # public variable for total download size.
               
@@ -1453,6 +1507,9 @@ sub saveContent() {
 # have name conflict, then rename the conflict file. E.g.,
 # from file.txt to file_(2).txt, and file_(3).txt etc.
 #
+# The sequential search below can be made faster by using
+# customized binary search.
+# 
 sub resolveConflictName() {
   my ($outfile) = @_;
   
@@ -1465,22 +1522,14 @@ sub resolveConflictName() {
   #print "outfile: $outfile\n";
   #print "outpath: $outpath, filename: $filename, suffix: $suffix\n";
   
-  my $dir = $local_root; # Use this since $flat_localpath is used.
-  opendir(DIR, $dir);
-  my $ct = 1;
-  while (my $file =readdir(DIR)) {
-    if ($file =~ m/^$filename\_\((\d+)\)$suffix$/) { 
-      #print "match: $file\n";
-      if ($ct < $1) { $ct = $1; } 
-    };
-    #print "$file, ct = $ct\n";
+  my $ct = 2;
+  while (1) {
+    my $outfile = "$outpath$filename\_($ct)$suffix";
+    if (! -e $outfile) { return $outfile; }
+    ++ $ct;
   }
-  closedir(DIR);
   
-  $ct ++;  
-  $outfile = "$outpath$filename\_($ct)$suffix";
-  #print "new name: $outfile\n";
-  return $outfile;
+  return ""; # should never happen.
 }
 
 
@@ -1670,6 +1719,16 @@ sub getCustomLinks() {
 ######################################################
 # Change log
 ######################################################
+# 7/25/2014
+# - Simplified function resolveConflictName().
+#   Previously loop through entire DIR to find files with name
+#   file_(k), now just test for the existence of files file_(k)
+#   for k = 2, ..., n. Could be faster using binary search.
+# - Added left time display to progressBar().
+# - change -V from on/off to value based, to allow msg at
+#   different levels. At level 1 the msg is the same as before,
+#   at level 2 message is about new_link reject/ignore reason.
+#
 # 7/24/2014
 # - Now in getFileHeader(), can get all response fields.
 #   Use is_error(), in that case return 0, so isWantedFile()

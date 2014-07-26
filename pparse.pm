@@ -85,6 +85,11 @@ use strict;
 package PParse;
 use base "HTML::Parser";
 
+
+######################################################
+# Definition of global variables.
+######################################################
+
 my $DEBUG = 0;
 
 my $OUTFILE = "pparse_out.txt";
@@ -96,6 +101,10 @@ my $filename = "File"; # name of the html file to parse.
 # 
 my @lines = ();
 
+
+######################################################
+# Definition of functions.
+######################################################
 
 #
 # Initialize parameters.
