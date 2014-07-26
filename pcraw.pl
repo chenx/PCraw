@@ -1589,7 +1589,7 @@ sub execCmd() {
             ", " . (($? & 128) ? 'with' : 'without') . " coredump" );
   }
   elsif ($? != 0) {
-      output( "execCmd() warning: command exited with value " . ($? >> 8) );
+    output( "execCmd() warning: command exited with value " . ($? >> 8) );
   }
 
   return $?;
