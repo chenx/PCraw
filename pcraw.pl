@@ -258,7 +258,6 @@ MAIN: if (1) {
   if ($url_root eq "" && $url_start eq "") {
     print ("\nError: url_root is not provided. Abort.\n");
     print ("For usage, type: perl $0 -h\n");
-    #&showUsage();
     exit(0);
   }
   
@@ -526,9 +525,11 @@ Usage: perl $0 $OPT_URL_START_S <url_start> [$OPT_URL_ROOT_S <url_root>] [-cdefg
     --version: same as -v
     --wait: same as -w
 
-  The most important options are:
-  -r or --url-root : url_root is needed, and must be provided.
-  -u or --url-start: url_start, when not provided, use url_root as default.
+  The two most important options are:
+  -r or --url-root : url_root is needed, if not provided, use longest path of url_start.
+  -u or --url-start: url_start, if not provided, use url_root as default.
+
+  At least one of these two must be provided.
   
   If an url contains special characters, like space or '&', then
   it should be enclosed with double quotes to work.

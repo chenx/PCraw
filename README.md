@@ -17,7 +17,7 @@ For each download task, at least 1 of 2 parameters below is needed:
 not provided, then it uses the longest path in url_start.
 
 2) url_start. This can be provided using the -u switch. This is the url where the crawling starts from. 
-If its value is not provided, it uses url_root as its value.  The reason to use another parameter url_start in addition to url_root is because under the same url_root one can start from different pages. With 2 parameters it is also easy to specify different sub portions of a domain to crawl.
+If its value is not provided, it uses url_root as its value.  The reason to use another parameter url_start in addition to url_root is because under the same url_root one can start from different pages. With 2 parameters it is also easier to specify different sub portions of a domain to crawl.
 
 
 The other options include:
@@ -105,9 +105,11 @@ Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-cdefghilmoprsuvw]
     --version: same as -v  
     --wait: same as -w  
 
-  The most important options are:  
-  -r or --url-root : url_root is needed, and must be provided.  
-  -u or --url-start: url_start, when not provided, use url_root as default.  
+  The two most important options are:
+  -r or --url-root : url_root is needed, if not provided, use longest path of url_start.
+  -u or --url-start: url_start, if not provided, use url_root as default.
+
+  At least one of these two must be provided.
   
   If an url contains special characters, like space or '&', then
   it should be enclosed with double quotes to work.
