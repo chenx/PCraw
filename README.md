@@ -28,10 +28,11 @@ The other options include:
 - Specify the max number of html files to crawl, starting from url_start. Note a html file can include many files of different types, here it is about the number of html files.
 - Specify the mime type of files to be downloaded. The mime types are specified using OR'd values of 1,2,4,8,.... See more in Usage section.
 - Specify the min and max file size to download. This applies only to non-html files. HTML files are always downloaded and parsed for links.
-- Whether to overwrite a previous crawl. If not overwrite, it starts from the broken point of the previous crawling session; if overwrite, it starts over again.
+- Whether to overwrite a previous crawl. If not overwrite, it starts from the broken point of the previous crawling session; if overwrite, it starts over again by renaming the prevous folder local_root/ to local_root-2/.
 - Specify the wait interval, between crawling each html file, and between crawling each links on the same html file. The default values are 5 seconds for the first, and 1 second for the second.
 - Specify whether include dynamic html page (e.g., http://a.com/b.php?c=d), or only include static html files.
 - Specify the default referer url. In general all links on a html file use that html url as referer. But at the very beginning the first html file will not have a referer, so specify one here. 
+- Specify verbose mode for more details on crawling. Verbose mode 1 will output downloaded files' type and size; verbose mode 2 will output reason if a url is rejected or ignored. To output both, use 3.
  
 See Usage section for the command line option switches.
 
@@ -57,7 +58,8 @@ Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-cdefghilmoprsuvw]
     -f: use flat local path: only one level under local root.  
     -g: allow global crawl outside url_root.  
     -h: print this help message.  
-    -i: download non-text files outside the url_root. Used when some files are stored outside the url_root.  
+    -i: download non-text files outside the url_root. Value is on(1)/off(0). Default is on.
+        Used when some linked files are stored outside the url_root.
     -l: max levels to crawl. Default to 0, 0 means inifinite.  
     -m: file mime type. Only files with given mime types are downloaded.  
         text - 0x1  
@@ -119,7 +121,7 @@ Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-cdefghilmoprsuvw]
     perl pcraw.pl -r http://a.com -u http://a.com/about.html  
     perl pcraw.pl --url-root http://a.com   
     perl pcraw.pl --url-root http://a.com --url-start http://a.com/  
-    perl pcraw.pl --url-root http://a.com -n 1 -m 2 -i -f --min-size 30000  
+    perl pcraw.pl --url-root http://a.com -n 1 -m 2 -f --min-size 30000  
   
 
 
