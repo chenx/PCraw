@@ -139,7 +139,7 @@ For each download task, a sub directory derived from the url_root
 
 A log file pcraw.log is created under the same directory.  
 
-A cookie file pcrawl_cookie.txt is created under the same directory.
+A cookie file pcraw_cookie.txt is created under the same directory.
 
 PCraw uses log files to keep track of crawling progress. If a crawling session is broken, next time starting the crawling  it can pick up from the broken point. It does this by using the following log files stored under local_root (where the downloaded files are stored). When PCraw starts, it first read in values from these 3 logs.
 

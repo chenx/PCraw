@@ -45,7 +45,7 @@ For each download task, a sub directory derived from the url_root
 
 A log file pcraw.log is created under the same directory.
 
-A cookie file pcrawl_cookie.txt is created under the same directory.
+A cookie file pcraw_cookie.txt is created under the same directory.
 
 For each download task, at least 2 parameters are needed:
 
@@ -140,7 +140,7 @@ my $wait_interval = 1;  # Wait (seconds) before retrieving next url (getUrl).
 my $flat_localpath = 0; # Use only one level of sub-directory locally.
 my $use_agent_firefox = 1; # Simulate firefox browser in header
 my $use_cookie = 1;     # Use cookie.
-my $cookie_file = "pcrawl_cookie.txt"; # Cookie file.
+my $cookie_file = "pcraw_cookie.txt"; # Cookie file.
 my $overwrite = 0;      # Overwrite previous download result.
 my $global_crawl = 0;   # If 1, allow crawl outside $url_root.
 my $referer_default = "http://yahoo.com"; # default referer visiting a page.
