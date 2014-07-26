@@ -87,7 +87,7 @@ Copyright (c) since July, 2014
 # Package name.
 ######################################################
 
-package XC;
+package PCraw;
 
 
 ######################################################
@@ -555,7 +555,7 @@ END_USAGE
 # Version information of this program.
 #
 sub showVersion() {
-  print "\nPcraw version 1.0\n";
+  print "\nPcraw version 1.0. \nCopyright (C) 2014, X. Chen\n\n";
 }
 
 
@@ -666,7 +666,7 @@ sub getSite() {
     output ("");
   }
   
-  my $history_exist = &getCrawlHistory();
+  my $history_exist = &getHistory();
   
   &logLastUrlStart(); # log which url_start this run uses.
   open LOG_Lnk_Found, ">> " . &getLnkFoundLog();
@@ -711,10 +711,10 @@ sub clearHistory() {
 #
 # Read log, resume from breaking point, instead of crawl again.
 #
-sub getCrawlHistory() {
+sub getHistory() {
   my $file = &getLnkFoundLog();
   if (! (-e $file)) { return 0; }
-  open FILE, "< $file" or die "getCrawlHistory(): cannot read file $file";
+  open FILE, "< $file" or die "getHistory(): cannot read file $file";
   while(<FILE>) {
     chomp();
     #print "$_\n";
@@ -739,7 +739,7 @@ sub getCrawlHistory() {
   
   # link_queue
   $file = &getLnkQueueLog();
-  open FILE, "< $file" or die "getCrawlHistory(): cannot read file $file";
+  open FILE, "< $file" or die "getHistory(): cannot read file $file";
   while(<FILE>) {
     chomp();
     #print "$_\n";
@@ -752,7 +752,12 @@ sub getCrawlHistory() {
   
   # link_queue_pt
   $file = &getLnkQueueIndexLog();
-  open FILE, "< $file" or die "getCrawlHistory(): cannot read file $file";
+  if (! -e $file) {
+    $link_queue_pt = 0;
+    return 1;
+  }
+
+  open FILE, "< $file" or die "getHistory(): cannot read file $file";
   while(<FILE>) {
     chomp();
     #print "$_\n";
@@ -762,7 +767,6 @@ sub getCrawlHistory() {
   
   @non_link_queue = ();
   
-  #exit(0);
   return 1;
 }
 
@@ -1032,9 +1036,16 @@ sub getDownloadSize() {
 sub writeTime() {
   my ($sec) = @_;
   my ($h, $m, $s);
+
   $h = floor($sec / 3600);
+  if ($h < 10) { $h = "0$h"; }
+
   $m = floor(($sec - ($h * 3600)) / 60);
+  if ($m < 10) { $m = "0$m"; }
+
   $s = $sec - ($h * 3600) - ($m * 60);
+  if ($s < 10) { $s = "0$s"; }
+
   return "$h:$m:$s";
 }
 
