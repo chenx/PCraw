@@ -1577,6 +1577,24 @@ sub execCmd() {
   my $cmd = shift;
   output($cmd);
   `$cmd`;
+
+  # success/failure of system/`` can be captured by
+  # $?. The success return value is 0.
+  # See: http://www.perlmonks.org/?node_id=486200
+  if ($? == -1) {
+    output( "execCmd() warning: failed to execute: $!" );
+  }
+  elsif ($? & 127) {
+    output( "execCmd() warning: child died with signal " . ($? & 127) . 
+            ", " . (($? & 128) ? 'with' : 'without') . " coredump" );
+  }
+  else {
+    if ($? != 0) {
+      output( "execCmd() warning: child exited with value " . ($? >> 8) );
+    }
+  }
+
+  return $?;
 }
 
 
