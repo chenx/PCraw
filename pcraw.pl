@@ -535,7 +535,7 @@ Usage: perl $0 $OPT_URL_START_S <url_start> [$OPT_URL_ROOT_S <url_root>] [-cdefg
     perl $0 -r http://a.com -u http://a.com/about.html
     perl $0 --url-root http://a.com 
     perl $0 --url-root http://a.com --url-start http://a.com/
-    perl $0 --url-root http://a.com -n 1 -m 2 -i -f --min-size 30000
+    perl $0 --url-root http://a.com -n 1 -m 2 -f --min-size 30000
   
 END_USAGE
 
