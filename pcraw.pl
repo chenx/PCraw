@@ -164,7 +164,7 @@ my $verbose = 0;
 # but the displayed images are stored in http://site/images/, 
 # then set this to 1 if those should be downloaded also.
 #
-my $get_outside_file = 0;
+my $get_outside_file = 1;
 
 #
 # Dynamic pages are like: http://site/page.asp?a=b
@@ -351,6 +351,9 @@ sub getOptions() {
     elsif ($a eq $OPT_DEFAULT_REFERER_S || $a eq $OPT_DEFAULT_REFERER_L) {
       $state = $OPT_DEFAULT_REFERER_S;
     }
+    elsif ($a eq $OPT_OUTSIDE_FILE_S || $a eq $OPT_OUTSIDE_FILE_L) {
+      $state = $OPT_OUTSIDE_FILE_S;
+    }
     elsif ($a eq $OPT_VERBOSE_S || $a eq $OPT_VERBOSE_L) {
       $verbose = 1; # default verbase level is 1, if no value provided.
       $state = $OPT_VERBOSE_S;
@@ -369,9 +372,6 @@ sub getOptions() {
     elsif ($a eq $OPT_STATIC_ONLY_S || $a eq $OPT_STATIC_ONLY_L) {
       $static_page_only = 1; $state = ""; 
     }    
-    elsif ($a eq $OPT_OUTSIDE_FILE_S || $a eq $OPT_OUTSIDE_FILE_L) {
-      $get_outside_file = 1; $state = ""; 
-    }
     elsif ($a eq $OPT_DEBUG_S || $a eq $OPT_DEBUG_L) {
       $DEBUG = 1; $state = ""; 
     }
@@ -430,6 +430,9 @@ sub getOptions() {
     elsif ($state eq $OPT_VERBOSE_S) {
       $verbose = getPosInt($a); $state = "";
     }
+    elsif ($state eq $OPT_OUTSIDE_FILE_S) {
+      $get_outside_file = getPosInt($a); $state = "";
+    }
 
     else { 
       print "Warning: unknown option $a\n";
@@ -466,8 +469,8 @@ Usage: perl $0 $OPT_URL_START_S <url_start> [$OPT_URL_ROOT_S <url_root>] [-cdefg
     -f: use flat local path: only one level under local root.
     -g: allow global crawl outside url_root.
     -h: print this help message.
-    -i: download non-text files outside the url_root.
-        Used when files are stored outside the url_root.
+    -i: download non-text files outside the url_root. Value is on(1)/off(0). Default is on.
+        Used when some linked files are stored outside the url_root.
     -l: max levels to crawl. Default to 0, 0 means inifinite.
     -m: file mime type. Only files with given mime types are downloaded.
         text - 0x1
