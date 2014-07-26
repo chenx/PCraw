@@ -932,9 +932,9 @@ sub doCrawl() {
       }
       else {
         #print "::$new_url, $content_type, $content_size\n";
-        #if (($verbose & 2) && $content_type =~ /text\/html/i) {
+        if ($verbose & 2) { # && $content_type =~ /text\/html/i) {
           print "* reject (" . getRejectReason($isWanted) . "): $new_url\n";
-        #}
+        }
       }
       
       #print "::$new_url:: $links_found{$new_url}\n";
