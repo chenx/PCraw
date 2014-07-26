@@ -62,17 +62,17 @@ Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-cdefghilmoprsuvw]
         Used when some linked files are stored outside the url_root.
     -l: max levels to crawl. Default to 0, 0 means inifinite.  
     -m: file mime type. Only files with given mime types are downloaded. E.g., to download text and image files, use 0x1 | 0x2 = 3.  
-        text - 0x1  
-        image - 0x2  
-        audio - 0x4  
-        video - 0x8  
-        application - 0x10  
-        message - 0x20  
-        model - 0x40  
-        multipart - 0x80  
-        example - 0x100  
-        application/vnd - 0x200  
-        application/x - 0x400  
+        text  - 0x1 = 1  
+        image - 0x2 = 2  
+        audio - 0x4 = 4  
+        video - 0x8 = 8  
+        application - 0x10 = 16  
+        message - 0x20 = 32  
+        model - 0x40 = 64  
+        multipart - 0x80 = 128  
+        example - 0x100 = 256  
+        application/vnd - 0x200 = 512  
+        application/x - 0x400 = 1024  
         Refer to: http://en.wikipedia.org/wiki/Internet_media_type  
     -n <number_of_links>: the number of links to crawl. 0 means inifinite.  
     -o: overwrite previous download result.  
