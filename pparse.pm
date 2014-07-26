@@ -70,7 +70,7 @@ APACHE/MIT/BSD/GPL
 X. Chen <chenx@hawaii.edu>
 
 =item 
-Copyright (c) since July, 2014
+Copyright (C) since July, 2014
 
 =back
 

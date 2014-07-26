@@ -10,7 +10,7 @@ About the Crawling
 PCraw simulates a Firefox browser that accepts cookie. The downloaded files are stored locally in a folder ./download/&lt;local_root&gt;.  The value of local_root is obtained from url_root (see below).
 
 
-For each download task, at least 1 of 2 parameters below is needed:
+For each download task, at least one of two parameters below is needed:
 
 1) url_root. This can be provided using the -r switch. Unless the global crawl option -g or 
 --global-crawl is specified, only files under this url will be downloaded. If its value is 
@@ -132,10 +132,8 @@ Implementation Internals
 
 This section shortly gives some details of implementation for interested users.
 
-When used for the first time, PCraw creates a local repository 
-./download/ under the same directory. 
-For each download task, a sub directory derived from the url_root 
-(see below) will be created, and all downloads are stored there. 
+When used for the first time, PCraw creates a local repository ./download/ under the same directory. 
+For each download task, a sub directory derived from the url_root will be created, and all downloads are stored there. 
 
 A log file pcraw.log is created under the same directory.  
 

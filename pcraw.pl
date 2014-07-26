@@ -47,7 +47,7 @@ A log file pcraw.log is created under the same directory.
 
 A cookie file pcraw_cookie.txt is created under the same directory.
 
-For each download task, at least 2 parameters are needed:
+For each download task, at least one of these two parameters is needed:
 
 1) url_root. Unless the global crawl option -g or --global-crawl
 is specified, only files under this url will be downloaded.
@@ -76,7 +76,7 @@ APACHE/MIT/BSD/GPL
 X. Chen <chenx@hawaii.edu>
 
 =item 
-Copyright (c) since July, 2014
+Copyright (C) since July, 2014
 
 =back
 
