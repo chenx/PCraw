@@ -355,7 +355,7 @@ sub getOptions() {
       $state = $OPT_OUTSIDE_FILE_S;
     }
     elsif ($a eq $OPT_VERBOSE_S || $a eq $OPT_VERBOSE_L) {
-      $verbose = 1; # default verbase level is 1, if no value provided.
+      $verbose = 2; # default verbase level is 2, if no value provided.
       $state = $OPT_VERBOSE_S;
     }
     elsif ($a eq $OPT_MIN_SIZE_L) {
