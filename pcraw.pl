@@ -903,7 +903,8 @@ sub doCrawl() {
     }    
     
     # Do not crawl more than max levels.
-    if ($crawl_max_level > 0 && ($cur_url_value > $crawl_max_level)) { last; }
+    #if ($crawl_max_level > 0 && ($cur_url_value > $crawl_max_level)) { last; }
+    if ( &crawlMaxLevelReached($cur_url_value) ) { last; }
         
     # Otherwise, continue crawl.
     output( "link #" . (1 + $link_queue_pt) . ": $url" );
@@ -1015,6 +1016,15 @@ sub doCrawl() {
 sub crawlMaxNumReached() {
   my ($link_queue_pt) = @_;
   return $crawl_number > 0 && $link_queue_pt >= $crawl_number;
+}
+
+
+#
+# Max level of crawling is reached.
+#
+sub crawlMaxLevelReached() {
+  my ($cur_url_value) = @_;
+  return $crawl_max_level > 0 && ($cur_url_value > $crawl_max_level);
 }
 
 
