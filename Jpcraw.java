@@ -46,12 +46,11 @@ class Jpcraw {
         Arrays.fill(chars, ' ');
         String strClearProgressBar = new String(chars);
 
-        /* dump output stream */
+        // dump output stream 
         BufferedReader is = new BufferedReader
             ( new InputStreamReader(oProcess.getInputStream()));
         String sLine;
         while ((sLine = is.readLine()) != null) {
-            //System.out.print(sLine);
             if (sLine.startsWith("|") ||
                 sLine.startsWith("parsing links, please wait") ||
                 sLine.startsWith("wait for ")
@@ -65,9 +64,17 @@ class Jpcraw {
                 System.out.println(sLine);
             }
         }
+
+        // dump error stream
+        is = new BufferedReader
+            ( new InputStreamReader(oProcess.getErrorStream()) );
+        while ((sLine = is.readLine()) != null) {
+            System.out.println(sLine);
+        }
+
         System.out.flush();
 
-        /* print final result of process */
+        // print final result of process 
         //System.err.println("Exit status=" + oProcess.exitValue());
         return;
     }

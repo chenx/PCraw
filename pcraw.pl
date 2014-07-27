@@ -651,11 +651,13 @@ sub getLocalRoot() {
   $root =~ s/\//_/g; # replace all "/" with "_".
   $root = encodePath($root);
 
-  $local_root = $local_repos . $root;
+  #$root = $local_repos . $root;
   if ($DEBUG) 
   { 
     output ("getLocalRoot(): local_root = $root" ); 
   }
+
+  return $root;
 }
 
 
@@ -676,7 +678,9 @@ sub getSite() {
   my ($ss_s, $mm_s, $hh_s) = localtime(time);
 
   &createLocalRepos(); # create local repository, if not exist.
-  &getLocalRoot($url_root); # create local root for this task.
+
+  # create local root for this crawl task.
+  $local_root = $local_repos . &getLocalRoot($url_root); 
   
   if ($overwrite && -d $local_root) { clearHistory(); }
 
@@ -1649,6 +1653,9 @@ sub execCmd() {
 #
 sub getLocalPath() {
   my ($path, $filename) = @_;
+  if ($DEBUG) {
+    print "getLocalPath(): remote path=$path, filename=$filename\n";
+  }
 
   # When global_crawl is on, path is outside url_root.
   # Call the extension function.
@@ -1658,25 +1665,20 @@ sub getLocalPath() {
   # Otherwise, path is inside url_root. Process below.
   
   if ($flat_localpath) { return $local_root; } # Use flat path.
-  
-  #my $pattern = "$url_root";
-  if ($DEBUG) { 
-    print "getLocalPath(): remote path=$path, filename=$filename\n"; 
-  }
-  if ($path =~ /^$url_root/i) {
-    $path =~ s/^$url_root//i;
-  } else { # not under the same $url_root. Should not happen here.
-    $path = &removeHttpHdr($path);
-  }
 
   # Remove filename from path.
   $path = substr($path, 0, length($path) - length($filename));
+  if ($path =~ /^\//) { $path =~ s/^\///; } # remove trailing /.
   #print "after remove filename: $path\n";
-  if ($path =~ /^\//) { $path =~ s/^\///; }
-    
-  if ($local_root =~ /\/$/) { $path = "$local_root$path"; }
-  else {$path = "$local_root/$path"; }
-    
+
+  if ($path =~ /^$url_root/i) {
+    $path =~ s/^$url_root//i;
+    if ($local_root =~ /\/$/) { $path = "$local_root$path"; }
+    else {$path = "$local_root/$path"; }
+  } else { # not under the same $url_root. create different local root.
+    $path = $local_repos . &getLocalRoot($path);
+  }
+
   $path = encodePath($path);  
   if($DEBUG) { print "getLocalPath(): local dir=$path\n"; }
 
