@@ -57,7 +57,7 @@ class Jpcraw {
         Arrays.fill(chars, ' ');
         String strClearProgressBar = new String(chars);
 
-        // Captures stdout and stderr of command.
+        // Capture stdout and stderr of command.
         BufferedReader stdout = new BufferedReader
             ( new InputStreamReader(oProcess.getInputStream()) );
         BufferedReader stderr = new BufferedReader
