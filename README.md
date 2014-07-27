@@ -125,30 +125,53 @@ Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-cdefghilmoprsuvw]
     // Show help.
     perl pcraw.pl -h  
     
-    // Starts from default page under a.com, crawl all linked pages in a.com.
+    // Start from default page under a.com, crawl all linked pages in a.com.
     perl pcraw.pl -r http://a.com   
 
-    // Starts from index.html, crawl all linked pages in a.com.
+    // Start from index.html, crawl all linked pages in a.com.
     perl pcraw.pl -u http://a.com/index.html  
 
-    // Starts from about.html, crawl all linked pages in a.com.
+    // Start from about.html, crawl all linked pages in a.com.
     perl pcraw.pl -r http://a.com -u http://a.com/about.html  
 
-    // This starts from the default page under a.com, crawl all linked pages.
+    // Start from the default page under a.com, crawl all linked pages.
     perl pcraw.pl --url-root http://a.com   
 
-    // This starts from the about.html page, crawl all linked pages under a.com.
+    // Start from the about.html page, crawl all linked pages under a.com.
     perl pcraw.pl --url-root http://a.com --url-start http://a.com/about.html    
 
-    // Starts from the default page under d/, crawl all linked pages under d/.
+    // Start from the default page under d/, crawl all linked pages under d/.
     perl pcraw.pl -u http://a.com/b/c/d/
 
-    // Starts from the default page under d/, crawl all linked pages under a.com.
+    // Start from the default page under d/, crawl all linked pages under a.com.
     perl pcraw.pl -u http://a.com/b/c/d/ -r http://a.com
 
-    // Crawls only 1 page, and download both text/html and images, where image
-    // size should be at least 30000 bytes, and use flat local directory storage.
+    // Crawl only 1 page, and download both text/html and images, where image
+    // size should be at least 30000 bytes, and use flat local directory storage
+    // instead of default (creating hierarchical directories same as remote path).
     perl pcraw.pl --url-root http://a.com -n 1 -m 2 -f --min-size 30000  
+
+    // Start from default page under a.com, each request of a html page should
+    // wait for 10 seconds, each request of a linked non-html file in a page 
+    // should wait for 5 seconds. Parse each html page to extract texts (strip 
+    // tags) and store in pparse_out.txt.
+    perl pcraw.pl -u http://a.com -c 10 -w 5 -p
+
+    // Start from default page under a.com, crawl first 10 html pages.
+    perl pcraw.pl -u http://a.com -n 10
+
+    // Start from default page under a.com, crawl all linked files at most 5 levels deep.
+    perl pcraw.pl -u http://a.com -l 5
+
+    // Crawl website a.com, backup previous download folder from ./download/a.com/ to 
+    // ./download/a.com-2/, or ./download/a.com-3/ if a.com-2/ already exists.
+    perl pcraw.pl -u http://a.com -o
+
+    // Crawl website a.com, delete previous download folder ./download/a.com/.
+    perl pcraw.pl -u http://a.com -o 2
+
+    // Start from a.com, crawl the entire Internet reachable from here.
+    perl pcraw.pl -u http://a.com -g
   </pre>
 
 Implementation Internals
