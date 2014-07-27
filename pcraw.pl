@@ -890,7 +890,7 @@ sub doCrawl() {
   
   while ($link_queue_pt < $link_queue_len) {
     # For testing, only get first $crawl_number number of links.
-    if ($crawl_number > 0 && $link_queue_pt >= $crawl_number) { last; } 
+    if ( &crawlNumReached($link_queue_pt) ) { last; }
     print ("wait for $crawl_interval seconds ...                   \r");
     sleep($crawl_interval);
     &clearProgressBar(); # clear the previous wait message.
@@ -925,6 +925,8 @@ sub doCrawl() {
     if (&mimeTypeMatch("text") && &fileSizeMatch($content_len)) {
       &saveContent($url, $contents, $content_type, $content_len);
     }
+    # if don't get outside files, then no need to parse links on this page.
+    if (! $get_outside_file && &crawlNumReached($link_queue_pt + 1) ) { last; }
    
     if ($parse_html) { &parseHtml($url, $contents); } # Parse html.
    
@@ -1004,6 +1006,15 @@ sub doCrawl() {
   &clearProgressBar();
   #&dumpLinksCrawled($link_queue_pt);
   &writeSummary($link_queue_pt);
+}
+
+
+#
+# Max number of links to crawl is reached.
+#
+sub crawlNumReached() {
+  my ($link_queue_pt) = @_;
+  return $crawl_number > 0 && $link_queue_pt >= $crawl_number;
 }
 
 
