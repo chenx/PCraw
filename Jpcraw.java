@@ -63,8 +63,9 @@ class Jpcraw {
         BufferedReader stderr = new BufferedReader
             ( new InputStreamReader(oProcess.getErrorStream()) );
 
+        // Match progress bar: |=...=>, where there is 0 to n '='.
+        Pattern pattern = Pattern.compile("^\\|=*>.*"); 
         String sLine;
-        Pattern pattern = Pattern.compile("^\\|=*>.*"); // match: |=..=>
 
         // Dump stdout stream.
         while ((sLine = stdout.readLine()) != null) {
