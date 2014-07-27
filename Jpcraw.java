@@ -30,26 +30,26 @@ import java.util.Arrays;
 class Jpcraw {
 
     public static void main(String[] args) throws IOException {
-        //String[] aCmdArgs = { "perl", "-e", "print \"Hello World\"" };
-        //String[] aCmdArgs = {"perl", "PCraw.pl", "-v");
+        //String[] cmdArgs = { "perl", "-e", "print \"Hello World\"" };
+        //String[] cmdArgs = {"perl", "PCraw.pl", "-v");
 
-        String[] aCmdArgs = new String[2 + args.length];
-        aCmdArgs[0] = "perl";
-        aCmdArgs[1] = "pcraw.pl";
+        String[] cmdArgs = new String[2 + args.length];
+        cmdArgs[0] = "perl";
+        cmdArgs[1] = "pcraw.pl";
         for (int i = 0; i < args.length; ++ i) {
-            aCmdArgs[i+2] = args[i];
+            cmdArgs[i+2] = args[i];
         }
 
         Runtime oRuntime = Runtime.getRuntime();
         Process oProcess = null;
 
         try {
-            oProcess = oRuntime.exec(aCmdArgs);
+            oProcess = oRuntime.exec(cmdArgs);
             // This will block, and won't be able to output in real time.
             // Remove this, so it can output in real time.
             //oProcess.waitFor();
         } catch (Exception e) {
-            System.out.println("error executing " + aCmdArgs[0]);
+            System.out.println("error executing " + cmdArgs[0]);
         }
         
         char[] chars = new char[79];
