@@ -896,15 +896,15 @@ sub doCrawl() {
     &clearProgressBar(); # clear the previous wait message.
 
     $url = $link_queue[$link_queue_pt];     # get next url to crawl.    
-    my $cur_url_value = $links_found{$url}; # should alwasy exist and < 0.
-    if ($cur_url_value < 0) { 
-      $cur_url_value = - $cur_url_value;       
+    my $cur_url_level = $links_found{$url}; # should alwasy exist and < 0.
+    if ($cur_url_level < 0) { 
+      $cur_url_level = - $cur_url_level;       
       $links_found{$url} = - $links_found{$url};
     }    
     
     # Do not crawl more than max levels.
-    #if ($crawl_max_level > 0 && ($cur_url_value > $crawl_max_level)) { last; }
-    if ( &crawlMaxLevelReached($cur_url_value) ) { last; }
+    #if ($crawl_max_level > 0 && ($cur_url_level > $crawl_max_level)) { last; }
+    if ( &crawlMaxLevelReached($cur_url_level) ) { last; }
         
     # Otherwise, continue crawl.
     output( "link #" . (1 + $link_queue_pt) . ": $url" );
@@ -954,7 +954,7 @@ sub doCrawl() {
             $referers{$new_url} = $url; # record referer of page $new_url.
 
             # add found new_url with level, label as not crawled.
-            $links_found{$new_url} = - ( $cur_url_value + 1 );
+            $links_found{$new_url} = - ( $cur_url_level + 1 );
             $links_found_ct ++;
             &logLnkFound("$links_found_ct. $new_url => $links_found{$new_url}");            
           }
@@ -986,7 +986,7 @@ sub doCrawl() {
       
       #print "::$new_url:: $links_found{$new_url}\n";
       if (! exists($links_found{$new_url})) {
-        $links_found{$new_url} = $cur_url_value + 1; # record crawl level.
+        $links_found{$new_url} = $cur_url_level + 1; # record crawl level.
         if ($content_type =~ /text\/html/i) { # html files should keep crawlable.
           $links_found{$new_url} = - $links_found{$new_url}; 
         }
@@ -1020,11 +1020,11 @@ sub crawlMaxNumReached() {
 
 
 #
-# Max level of crawling is reached.
+# Max level/depth of crawling is reached.
 #
 sub crawlMaxLevelReached() {
-  my ($cur_url_value) = @_;
-  return $crawl_max_level > 0 && ($cur_url_value > $crawl_max_level);
+  my ($cur_url_level) = @_;
+  return $crawl_max_level > 0 && ($cur_url_level > $crawl_max_level);
 }
 
 
