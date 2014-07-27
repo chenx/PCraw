@@ -4,7 +4,7 @@
 //
 // This wrapper can be extended to a platform independent GUI for PCraw.
 //
-// To run, type: java Jpcraw -v
+// To run, first compile: javac Jpcraw.java, then type: java Jpcraw -v
 // Parameters are the same as for pcraw.pl
 //
 // Modified from: http://www.perlmonks.org/?node_id=880769
