@@ -512,7 +512,7 @@ Usage: perl $0 $OPT_URL_START_S <url_start> [$OPT_URL_ROOT_S <url_root>] [-bcdef
         Refer to: http://en.wikipedia.org/wiki/Internet_media_type
     -n <number of links>: the number of links to crawl. 0 means inifinite.
     -o <0| |1|2>: overwrite previous download result. 
-        0: don't overwrite; 1: move from Dir to Dir-2; 2: remove. 
+        0: do not overwrite; 1: move from Dir to Dir-2; 2: remove. 
         When not specify -o, is 0; when use -o without a value, default to 1.
     -p: parse html. So far just print out text without tags.
     -r <url_root>: root url.
