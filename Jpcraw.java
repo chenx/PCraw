@@ -1,5 +1,5 @@
 //
-// This java program runs PCraw, captures its stdout and stderr output 
+// This java program runs PCraw, captures its stdout and stderr streams 
 // and display to stdout in real time.
 //
 // This wrapper can be extended to a platform independent GUI for PCraw.
