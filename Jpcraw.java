@@ -94,6 +94,5 @@ class Jpcraw {
 
         // Print final result of process.
         //System.err.println("Exit status=" + oProcess.exitValue());
-        return;
     }
 }
