@@ -1007,7 +1007,7 @@ sub writeSummary() {
   my @keys = keys %links_found;
   my $links_found = @keys;
 
-  output ("");
+  output (" ");
   output ("Links found: $links_found");
   output ("Links crawlable: $link_queue_len");
   output ("Links crawled (A): $link_queue_pt");
