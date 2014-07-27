@@ -51,17 +51,17 @@ Usage
 Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-cdefghilmoprsuvw]
 <pre>
   Options (short format):  
-    -c <seconds>: wait time (seconds) before crawling next html page.  
+    -c &lt;seconds>: wait time (seconds) before crawling next html page.  
     -d: debug, print debug information.  
-    -e <default referer>: default referer when crawling a url, if none exists.  
+    -e &lt;default referer>: default referer when crawling a url, if none exists.  
         This is used when crawling the first page, when no referer exists yet.  
     -f: use flat local path: only one level under local root.  
     -g: allow global crawl outside url_root.  
     -h: print this help message.  
-    -i <0| |1>: download non-text files outside the url_root. Value is on(1)/off(0). Default is on.
-        Used when some linked files are stored outside the url_root.    
-    -l <level number>: max levels to crawl. Default to 0, 0 means inifinite.  
-    -m <mime type>: file mime type. Only files with given mime types are downloaded. 
+    -i &lt;0| |1>: download non-text files outside the url_root. Value is on(1)/off(0). 
+        Default is on. Used when some linked files are stored outside the url_root.    
+    -l &lt;level number>: max levels to crawl. Default to 0, 0 means inifinite.  
+    -m &lt;mime type>: file mime type. Only files with given mime types are downloaded. 
        E.g., to download text and image files, use 0x1 | 0x2 = 3.   
         text  - 0x1 = 1  
         image - 0x2 = 2  
@@ -75,16 +75,16 @@ Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-cdefghilmoprsuvw]
         application/vnd - 0x200 = 512  
         application/x - 0x400 = 1024  
         Refer to: http://en.wikipedia.org/wiki/Internet_media_type   
-    -n <number of links>: the number of links to crawl. 0 means inifinite.  
-    -o <0| |1|2>: overwrite previous download result.  
+    -n &lt;number of links>: the number of links to crawl. 0 means inifinite.  
+    -o &lt;0| |1|2>: overwrite previous download result.  
         Values: 0: don't overwrite; 1: move from Dir to Dir-2; 2: remove.  
         When not specify -o, is 0; when use -o without a value, default to 1.  
     -p: parse html. So far just print out text without tags.  
-    -r <url_root>: root url. Only files under this path are downloaded. Except when -o is used.  
-    -s: only download static pages. Dynamic pages with parameters like http://a.php?a=b are ignored.  
-    -u <url_start>: start url. This is where a crawling task starts from.  
+    -r &lt;url_root>: root url. Only files under this are downloaded. Except when -o is used.  
+    -s: only download static pages. Dynamic pages like http://a.php?a=b are ignored.  
+    -u &lt;url_start>: start url. This is where a crawling task starts from.  
     -v: show version information.  
-    -w <seconds>: wait time (seconds) before getting next url. 
+    -w &lt;seconds>: wait time (seconds) before getting next url. 
        Difference of this with -c is: on each html page, there can be several urls. 
        -c is for each html page, -w is for each url.  
 
@@ -108,8 +108,8 @@ Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-cdefghilmoprsuvw]
     --version: same as -v  
     --wait: same as -w  </pre>
 
-  The two most important options are:
-  -r or --url-root : url_root is needed, if not provided, use longest path of url_start.
+  The two most important options are:  
+  -r or --url-root : url_root is needed, if not provided, use longest path of url_start.  
   -u or --url-start: url_start, if not provided, use url_root as default.
 
   At least one of these two must be provided.
@@ -119,16 +119,35 @@ Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-cdefghilmoprsuvw]
 
   To see perldoc document, type: perldoc pcraw.pl
   
-  Examples:  
+  Examples: <pre> 
+    // Show help.
     perl pcraw.pl -h  
+    
+    // Starts from default page under a.com, crawl all linked pages in a.com.
     perl pcraw.pl -r http://a.com   
-    perl pcraw.pl -u http://a.com/index.html  
-    perl pcraw.pl -r http://a.com -u http://a.com/about.html  
-    perl pcraw.pl --url-root http://a.com   
-    perl pcraw.pl --url-root http://a.com --url-start http://a.com/  
-    perl pcraw.pl --url-root http://a.com -n 1 -m 2 -f --min-size 30000  
-  
 
+    // Starts from index.html, crawl all linked pages in a.com.
+    perl pcraw.pl -u http://a.com/index.html  
+
+    // Starts from about.html, crawl all linked pages in a.com.
+    perl pcraw.pl -r http://a.com -u http://a.com/about.html  
+
+    // This starts from the default page under a.com, crawl all linked pages.
+    perl pcraw.pl --url-root http://a.com   
+
+    // This starts from the about.html page, crawl all linked pages under a.com.
+    perl pcraw.pl --url-root http://a.com --url-start http://a.com/about.html    
+
+    // Starts from the default page under d/, crawl all linked pages under d/.
+    perl pcraw.pl -u http://a.com/b/c/d/
+
+    // Starts from the default page under d/, crawl all linked pages under a.com.
+    perl pcraw.pl -u http://a.com/b/c/d/ -r http://a.com
+
+    // Crawls only 1 page, and download both text/html and images, where image
+    // size should be at least 30000 bytes, and use flat local directory storage.
+    perl pcraw.pl --url-root http://a.com -n 1 -m 2 -f --min-size 30000  
+  </pre>
 
 Implementation Internals
 ========================
