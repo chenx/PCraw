@@ -53,15 +53,16 @@ class Jpcraw {
             System.out.println("Jpcraw: error executing " + cmdArgs[0]);
         }
         
-        char[] chars = new char[79];
-        Arrays.fill(chars, ' ');
-        String strClearProgressBar = new String(chars);
-
         // Capture stdout and stderr of command.
         BufferedReader stdout = new BufferedReader
             ( new InputStreamReader(oProcess.getInputStream()) );
         BufferedReader stderr = new BufferedReader
             ( new InputStreamReader(oProcess.getErrorStream()) );
+
+        // Get the string to clear ProgressBar.
+        char[] chars = new char[79];
+        Arrays.fill(chars, ' ');
+        String strClearProgressBar = new String(chars);
 
         // Match progress bar: |=...=>, where there is 0 to n '='.
         Pattern pattern = Pattern.compile("^\\|=*>.*"); 
