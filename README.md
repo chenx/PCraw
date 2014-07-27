@@ -152,7 +152,18 @@ Note in 1) we have mentioned each url appears twice, with the same values but di
 However, there is also a subtle issue involved. Suppose under the same url_root, first crawl with url_start1 and we crawled page p1. Then crawl starting from url_start2, which when come across p1, will give up crawling since p1 was labeled as crawled already. However if file p2 linked to by p1 is not processed yet (we interrupted the first crawling by pressing Ctrl-C), then p2 will not be crawled in the second crawl session. Solutions can include finishing the first crawling, or starting over from beginning in the second crawling using the -o option, which moves the previous local_root/ folder to local_root-2/.
 
 
+TO DO List
+=========
+
+- support specifying wanted file types by file suffix
+- robot.txt
+- GUI in Java
+- recrawl failed urls due to time out
+- dynamically change crawl speed for failed urls
+
+
 ======================
 Author: X. Chen  
 Copyright (C) 2014  
 License: Apache/MIT/BSD/GPL  
+
