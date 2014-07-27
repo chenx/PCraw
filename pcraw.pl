@@ -141,10 +141,17 @@ my $flat_localpath = 0; # Use only one level of sub-directory locally.
 my $use_agent_firefox = 1; # Simulate firefox browser in header
 my $use_cookie = 1;     # Use cookie.
 my $cookie_file = "pcraw_cookie.txt"; # Cookie file.
-my $overwrite = 0;      # Overwrite previous download result.
 my $global_crawl = 0;   # If 1, allow crawl outside $url_root.
 my $referer_default = "http://yahoo.com"; # default referer visiting a page.
 my $parse_html = 0;     # Parse html.
+
+#
+# Overwrite previous download of the same $url_root.
+#  0 - do not overwrite
+#  1 - move previous download folder D to new place: D-2
+#  2 - remove previous download forder
+#
+my $overwrite = 0;
 
 #
 # To get download left time. Used in getUrl() and callback().
@@ -364,6 +371,10 @@ sub getOptions() {
       $verbose = 2; # default verbase level is 2, if no value provided.
       $state = $OPT_VERBOSE_S;
     }
+    elsif ($a eq $OPT_OVERWRITE_S || $a eq $OPT_OVERWRITE_L) {
+      $overwrite = 1; # default to 1: move previous dir D to D-2.
+      $state = $OPT_OVERWRITE_S;
+    }
     elsif ($a eq $OPT_MIN_SIZE_L) {
       $state = $OPT_MIN_SIZE_L;
     }
@@ -383,9 +394,6 @@ sub getOptions() {
     }
     elsif ($a eq $OPT_FLAT_PATH_S || $a eq $OPT_FLAT_PATH_L) {
       $flat_localpath = 1; $state = "";
-    }
-    elsif ($a eq $OPT_OVERWRITE_S || $a eq $OPT_OVERWRITE_L) {
-      $overwrite = 1; $state = "";
     }
     elsif ($a eq $OPT_GLOBAL_CRAWL_S || $a eq $OPT_GLOBAL_CRAWL_L) {
       $global_crawl = 1; $state = "";
@@ -436,6 +444,10 @@ sub getOptions() {
     elsif ($state eq $OPT_VERBOSE_S) {
       $verbose = getPosInt($a); $state = "";
     }
+    elsif ($state eq $OPT_OVERWRITE_S) {
+      $overwrite = getPosInt($a); $state = "";
+      if ($overwrite > 2) { $overwrite = 2; }
+    }
     elsif ($state eq $OPT_OUTSIDE_FILE_S) {
       $get_outside_file = getPosInt($a); $state = "";
     }
@@ -468,17 +480,17 @@ sub showUsage() {
 Usage: perl $0 $OPT_URL_START_S <url_start> [$OPT_URL_ROOT_S <url_root>] [-cdefghilmoprsuvw]
 
   Options (short format):
-    -c: wait time (seconds) before crawling next html page.
+    -c <seconds>: wait time (seconds) before crawling next html page.
     -d: debug, print debug information.
-    -e: default referer when crawling a url, if none exists.
+    -e <default referer>: default referer when crawling a url, if none exists.
         This is used when crawling the first page, when no referer exists yet.
     -f: use flat local path: only one level under local root.
     -g: allow global crawl outside url_root.
     -h: print this help message.
-    -i: download non-text files outside the url_root. Value is on(1)/off(0). Default is on.
+    -i <0| |1>: download non-text files outside the url_root. Value is on(1)/off(0). Default is on.
         Used when some linked files are stored outside the url_root.
-    -l: max levels to crawl. Default to 0, 0 means inifinite.
-    -m: file mime type. Only files with given mime types are downloaded.
+    -l <level number>: max levels to crawl. Default to 0, 0 means inifinite.
+    -m <mime type>: file mime type. Only files with given mime types are downloaded.
         text - 0x1
         image - 0x2
         audio - 0x4
@@ -491,8 +503,10 @@ Usage: perl $0 $OPT_URL_START_S <url_start> [$OPT_URL_ROOT_S <url_root>] [-cdefg
         application/vnd - 0x200
         application/x - 0x400
         Refer to: http://en.wikipedia.org/wiki/Internet_media_type
-    -n <number_of_links>: the number of links to crawl. 0 means inifinite.
-    -o: overwrite previous download result.
+    -n <number of links>: the number of links to crawl. 0 means inifinite.
+    -o <0| |1|2>: overwrite previous download result. 
+        0: don't overwrite; 1: move from Dir to Dir-2; 2: remove. 
+        When not specify -o, is 0; when use -o without a value, default to 1.
     -p: parse html. So far just print out text without tags.
     -r <url_root>: root url.
         Only files under this path are downloaded. Except when -o is used.
@@ -501,7 +515,7 @@ Usage: perl $0 $OPT_URL_START_S <url_start> [$OPT_URL_ROOT_S <url_root>] [-cdefg
     -u <url_start>: start url.
         This is where a crawling task starts from.
     -v: show version information.
-    -w: wait time (seconds) before getting next url. Difference of this 
+    -w <seconds>: wait time (seconds) before getting next url. Difference of this 
         with -c is: on each html page, there can be several urls. -c is
         for each html page, -w is for each url.
 
@@ -701,9 +715,15 @@ sub getSite() {
 # Now do this by moving the previous directory to dir_(k), k = 2, 3, ...
 #
 sub clearHistory() {
+  if (! $overwrite) { return; }
+
   if (-d $local_root) {
-    #printf "rm -rf $local_root\n";
-    execCmd("mv $local_root " . &resolveConflictDirName($local_root));
+    if ($overwrite == 1) {
+      execCmd("mv $local_root " . &resolveConflictDirName($local_root));
+    }
+    elsif ($overwrite == 2) {
+      execCmd("rm -rf $local_root");
+    }
   }
 }
 

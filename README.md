@@ -28,7 +28,7 @@ The other options include:
 - Specify the max number of html files to crawl, starting from url_start. Note a html file can include many files of different types, here it is about the number of html files.
 - Specify the mime type of files to be downloaded. The mime types are specified using OR'd values of 1,2,4,8,.... See more in Usage section.
 - Specify the min and max file size to download. This applies only to non-html files. HTML files are always downloaded and parsed for links.
-- Whether to overwrite a previous crawl. If not overwrite, it starts from the broken point of the previous crawling session; if overwrite, it starts over again by renaming the prevous folder local_root/ to local_root-2/.
+- Whether to overwrite a previous crawl. If not overwrite, it starts from the broken point of the previous crawling session; if overwrite, in mode 1 it starts over again by renaming the prevous folder local_root/ to local_root-2/, in mode 2 it removes the previous folder..
 - Specify the wait interval, between crawling each html file, and between crawling each links on the same html file. The default values are 5 seconds for the first, and 1 second for the second.
 - Specify whether include dynamic html page (e.g., http://a.com/b.php?c=d), or only include static html files.
 - Specify the default referer url. In general all links on a html file use that html url as referer. But at the very beginning the first html file will not have a referer, so specify one here. 
@@ -49,19 +49,20 @@ Usage
 =====
 
 Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-cdefghilmoprsuvw]
-
+<pre>
   Options (short format):  
-    -c: wait time (seconds) before crawling next html page.  
+    -c <seconds>: wait time (seconds) before crawling next html page.  
     -d: debug, print debug information.  
-    -e: default referer when crawling a url, if none exists.  
+    -e <default referer>: default referer when crawling a url, if none exists.  
         This is used when crawling the first page, when no referer exists yet.  
     -f: use flat local path: only one level under local root.  
     -g: allow global crawl outside url_root.  
     -h: print this help message.  
-    -i: download non-text files outside the url_root. Value is on(1)/off(0). Default is on.
+    -i <0| |1>: download non-text files outside the url_root. Value is on(1)/off(0). Default is on.
         Used when some linked files are stored outside the url_root.    
-    -l: max levels to crawl. Default to 0, 0 means inifinite.  
-    -m: file mime type. Only files with given mime types are downloaded. E.g., to download text and image files, use 0x1 | 0x2 = 3.  
+    -l <level number>: max levels to crawl. Default to 0, 0 means inifinite.  
+    -m <mime type>: file mime type. Only files with given mime types are downloaded. 
+       E.g., to download text and image files, use 0x1 | 0x2 = 3.   
         text  - 0x1 = 1  
         image - 0x2 = 2  
         audio - 0x4 = 4  
@@ -73,15 +74,19 @@ Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-cdefghilmoprsuvw]
         example - 0x100 = 256  
         application/vnd - 0x200 = 512  
         application/x - 0x400 = 1024  
-        Refer to: http://en.wikipedia.org/wiki/Internet_media_type  
-    -n <number_of_links>: the number of links to crawl. 0 means inifinite.  
-    -o: overwrite previous download result.  
+        Refer to: http://en.wikipedia.org/wiki/Internet_media_type   
+    -n <number of links>: the number of links to crawl. 0 means inifinite.  
+    -o <0| |1|2>: overwrite previous download result.  
+        Values: 0: don't overwrite; 1: move from Dir to Dir-2; 2: remove.  
+        When not specify -o, is 0; when use -o without a value, default to 1.  
     -p: parse html. So far just print out text without tags.  
     -r <url_root>: root url. Only files under this path are downloaded. Except when -o is used.  
     -s: only download static pages. Dynamic pages with parameters like http://a.php?a=b are ignored.  
     -u <url_start>: start url. This is where a crawling task starts from.  
     -v: show version information.  
-    -w: wait time (seconds) before getting next url. Difference of this with -c is: on each html page, there can be several urls. -c is for each html page, -w is for each url.  
+    -w <seconds>: wait time (seconds) before getting next url. 
+       Difference of this with -c is: on each html page, there can be several urls. 
+       -c is for each html page, -w is for each url.  
 
   Options (long format):  
     --debug: same as -d  
@@ -101,7 +106,7 @@ Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-cdefghilmoprsuvw]
     --url-root: same as -r  
     --url_start: same as -u  
     --version: same as -v  
-    --wait: same as -w  
+    --wait: same as -w  </pre>
 
   The two most important options are:
   -r or --url-root : url_root is needed, if not provided, use longest path of url_start.
