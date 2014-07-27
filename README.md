@@ -48,9 +48,14 @@ Parsing of HTML is done by PParse.pm. It extracts text (without tags) and stores
 Usage
 =====
 
-Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-cdefghilmoprsuvw]
+Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-bcdefghilmoprsuvw]
 <pre>
   Options (short format):  
+    -b &lt;verbose level number>: print more details of crawling.
+        0 (or not specify -b) - print only basic information of urls/links crawled.
+        0x1 = 1 - print type/size and file download information.
+        0x2 = 2 - print saved file local path.
+        0x4 = 4 - print reject/ignore file reason.
     -c &lt;seconds>: wait time (seconds) before crawling next html page.  
     -d: debug, print debug information.  
     -e &lt;default referer>: default referer when crawling a url, if none exists.  
@@ -106,6 +111,7 @@ Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-cdefghilmoprsuvw]
     --static-only: same as -s  
     --url-root: same as -r  
     --url_start: same as -u  
+    --verbose: same as -b
     --version: same as -v  
     --wait: same as -w  </pre>
 
@@ -149,7 +155,8 @@ Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-cdefghilmoprsuvw]
     // Crawl only 1 page, and download both text/html and images, where image
     // size should be at least 30000 bytes, and use flat local directory storage
     // instead of default (creating hierarchical directories same as remote path).
-    perl pcraw.pl --url-root http://a.com -n 1 -m 2 -f --min-size 30000  
+    // Also print information of saved and rejected files.
+    perl pcraw.pl --url-root http://a.com -n 1 -m 2 -f --min-size 30000 -b 6 
 
     // Start from default page under a.com, each request of a html page should
     // wait for 10 seconds, each request of a linked non-html file in a page 

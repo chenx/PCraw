@@ -160,8 +160,10 @@ my $callback_t0;
 
 #
 # If $verbose > 0, print more details to screen and log:
+#   0   - print only basic information of urls/links crawled.
 #   0x1 - print type/size and file download information.
-#   0x2 - print reject/ignore file reason.
+#   0x2 - print saved file local path.
+#   0x4 - print reject/ignore file reason.
 #
 my $verbose = 0;
                         
@@ -221,7 +223,7 @@ my $OPT_DEBUG_S = "-d";
 my $OPT_DEBUG_L = "--debug";
 my $OPT_VERSION_S = "-v";
 my $OPT_VERSION_L = "--version";
-my $OPT_VERBOSE_S = "-V";
+my $OPT_VERBOSE_S = "-b";
 my $OPT_VERBOSE_L = "--verbose";
 my $OPT_MIME_TYPE_S = "-m";
 my $OPT_MIME_TYPE_L = "--mime-type";
@@ -480,6 +482,11 @@ sub showUsage() {
 Usage: perl $0 $OPT_URL_START_S <url_start> [$OPT_URL_ROOT_S <url_root>] [-cdefghilmoprsuvw]
 
   Options (short format):
+    -b <verbose level number>: print more details of crawling.
+        0 (or not specify -b) - print only basic information of urls/links crawled.
+        0x1 = 1 - print type/size and file download information.
+        0x2 = 2 - print saved file local path.
+        0x4 = 4 - print reject/ignore file reason.
     -c <seconds>: wait time (seconds) before crawling next html page.
     -d: debug, print debug information.
     -e <default referer>: default referer when crawling a url, if none exists.
@@ -491,17 +498,17 @@ Usage: perl $0 $OPT_URL_START_S <url_start> [$OPT_URL_ROOT_S <url_root>] [-cdefg
         Used when some linked files are stored outside the url_root.
     -l <level number>: max levels to crawl. Default to 0, 0 means inifinite.
     -m <mime type>: file mime type. Only files with given mime types are downloaded.
-        text - 0x1
-        image - 0x2
-        audio - 0x4
-        video - 0x8
-        application - 0x10
-        message - 0x20
-        model - 0x40
-        multipart - 0x80
-        example - 0x100
-        application/vnd - 0x200
-        application/x - 0x400
+        text - 0x1 = 1
+        image - 0x2 = 2
+        audio - 0x4 = 4
+        video - 0x8 = 8
+        application - 0x10 = 16
+        message - 0x20 = 32
+        model - 0x40 = 64
+        multipart - 0x80 = 128
+        example - 0x100 = 256
+        application/vnd - 0x200 = 512
+        application/x - 0x400 = 1024
         Refer to: http://en.wikipedia.org/wiki/Internet_media_type
     -n <number of links>: the number of links to crawl. 0 means inifinite.
     -o <0| |1|2>: overwrite previous download result. 
@@ -515,6 +522,7 @@ Usage: perl $0 $OPT_URL_START_S <url_start> [$OPT_URL_ROOT_S <url_root>] [-cdefg
     -u <url_start>: start url.
         This is where a crawling task starts from.
     -v: show version information.
+    -V: verbose. 
     -w <seconds>: wait time (seconds) before getting next url. Difference of this 
         with -c is: on each html page, there can be several urls. -c is
         for each html page, -w is for each url.
@@ -536,6 +544,7 @@ Usage: perl $0 $OPT_URL_START_S <url_start> [$OPT_URL_ROOT_S <url_root>] [-cdefg
     --static-only: same as -s
     --url-root: same as -r
     --url_start: same as -u
+    --verbose: same as -b
     --version: same as -v
     --wait: same as -w
 
@@ -948,7 +957,7 @@ sub doCrawl() {
             if ($verbose & 2) { print "* ignore (type_mismatch): $new_url\n"; }    
           }
           elsif (! &fileSizeMatch($content_size)) { # from getFileHeader().
-            if ($verbose & 2) { print "* ignore (size_mismatch): $new_url\n"; }    
+            if ($verbose & 4) { print "* ignore (size_mismatch): $new_url\n"; }    
           }
           else {
             #print "add to non-link Q, and save: $new_url\n";
@@ -963,7 +972,7 @@ sub doCrawl() {
       }
       else {
         #print "::$new_url, $content_type, $content_size\n";
-        if ($verbose & 2) { # && $content_type =~ /text\/html/i) {
+        if ($verbose & 4) { # && $content_type =~ /text\/html/i) {
           print "* reject (" . getRejectReason($isWanted) . "): $new_url\n";
         }
       }
@@ -1535,6 +1544,7 @@ sub saveContent() {
     binmode(OUTFILE);
     print OUTFILE $content;
     close OUTFILE;
+    if ($verbose & 2) { output ("* saved: $outfile"); }
   } else {
     output ("saveContent() error: cannot open file to save to: $outfile");
   }
