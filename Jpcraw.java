@@ -33,6 +33,7 @@ class Jpcraw {
         //String[] cmdArgs = { "perl", "-e", "print \"Hello World\"" };
         //String[] cmdArgs = {"perl", "PCraw.pl", "-v");
 
+        // Get command line options.
         String[] cmdArgs = new String[2 + args.length];
         cmdArgs[0] = "perl";
         cmdArgs[1] = "pcraw.pl";
@@ -45,22 +46,27 @@ class Jpcraw {
 
         try {
             oProcess = oRuntime.exec(cmdArgs);
-            // This will block, and won't be able to output in real time.
-            // Remove this, so it can output in real time.
+            // This will block, and cannot output in real time.
+            // Remove this, so that it can output in real time.
             //oProcess.waitFor();
         } catch (Exception e) {
-            System.out.println("error executing " + cmdArgs[0]);
+            System.out.println("Jpcraw: error executing " + cmdArgs[0]);
         }
         
         char[] chars = new char[79];
         Arrays.fill(chars, ' ');
         String strClearProgressBar = new String(chars);
 
-        // dump output stream 
-        BufferedReader is = new BufferedReader
-            ( new InputStreamReader(oProcess.getInputStream()));
+        // Captures stdout and stderr of command.
+        BufferedReader stdout = new BufferedReader
+            ( new InputStreamReader(oProcess.getInputStream()) );
+        BufferedReader stderr = new BufferedReader
+            ( new InputStreamReader(oProcess.getErrorStream()) );
+
         String sLine;
-        while ((sLine = is.readLine()) != null) {
+
+        // Dump stdout stream.
+        while ((sLine = stdout.readLine()) != null) {
             if (sLine.startsWith("|") ||
                 sLine.startsWith("parsing links, please wait") ||
                 sLine.startsWith("wait for ")
@@ -75,16 +81,14 @@ class Jpcraw {
             }
         }
 
-        // dump error stream
-        is = new BufferedReader
-            ( new InputStreamReader(oProcess.getErrorStream()) );
-        while ((sLine = is.readLine()) != null) {
+        // Dump stderr stream.
+        while ((sLine = stderr.readLine()) != null) {
             System.out.println(sLine);
         }
 
         System.out.flush();
 
-        // print final result of process 
+        // Print final result of process.
         //System.err.println("Exit status=" + oProcess.exitValue());
         return;
     }
