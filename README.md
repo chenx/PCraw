@@ -80,7 +80,8 @@ Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-cdefghilmoprsuvw]
         Values: 0: don't overwrite; 1: move from Dir to Dir-2; 2: remove.  
         When not specify -o, is 0; when use -o without a value, default to 1.  
     -p: parse html. So far just print out text without tags.  
-    -r &lt;url_root>: root url. Only files under this are downloaded. Except when -o is used.  
+    -r &lt;url_root>: root url. Only files under this are downloaded. 
+       Except when -o is used, then crawl globally and there is no limit.  
     -s: only download static pages. Dynamic pages like http://a.php?a=b are ignored.  
     -u &lt;url_start>: start url. This is where a crawling task starts from.  
     -v: show version information.  
@@ -119,7 +120,8 @@ Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-cdefghilmoprsuvw]
 
   To see perldoc document, type: perldoc pcraw.pl
   
-  Examples: <pre> 
+  Examples: <pre>
+
     // Show help.
     perl pcraw.pl -h  
     
