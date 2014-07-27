@@ -120,8 +120,8 @@ Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-cdefghilmoprsuvw]
 
   To see perldoc document, type: perldoc pcraw.pl
   
-  Examples: <pre>
-
+  Examples:   
+<pre>
     // Show help.
     perl pcraw.pl -h  
     
