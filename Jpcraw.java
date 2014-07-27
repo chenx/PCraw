@@ -53,7 +53,9 @@ class Jpcraw {
         while ((sLine = is.readLine()) != null) {
             //System.out.print(sLine);
             if (sLine.startsWith("|") ||
-                sLine.startsWith("parsing links, please wait")) {
+                sLine.startsWith("parsing links, please wait") ||
+                sLine.startsWith("wait for ")
+            ) {
                 System.out.print(sLine + "\r");
             }
             else if (sLine.equals(strClearProgressBar)) {

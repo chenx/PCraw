@@ -860,7 +860,7 @@ sub doCrawl() {
     if ($crawl_number > 0 && $link_queue_pt >= $crawl_number) { last; } 
     print ("wait for $crawl_interval seconds ...                   \r");
     sleep($crawl_interval);
-    print ("                        \r"); # clear the previous message.
+    &clearProgressBar(); # clear the previous wait message.
 
     $url = $link_queue[$link_queue_pt];     # get next url to crawl.    
     my $cur_url_value = $links_found{$url}; # should alwasy exist and < 0.
