@@ -60,7 +60,7 @@ This can be provided using the -u switch.
 
 =head1 SYNOPSIS
 
-Usage: perl pcraw.pl [-cdefghilmoprsuvw]
+Usage: perl pcraw.pl [-bcdefghilmnoprsuvw]
 
 For more help on usage, type: perl pcraw.pl -h 
 
@@ -479,7 +479,7 @@ sub getPosInt() {
 sub showUsage() {
   my $usage = <<"END_USAGE"; 
 
-Usage: perl $0 $OPT_URL_START_S <url_start> [$OPT_URL_ROOT_S <url_root>] [-cdefghilmoprsuvw]
+Usage: perl $0 $OPT_URL_START_S <url_start> [$OPT_URL_ROOT_S <url_root>] [-bcdefghilmnoprsuvw]
 
   Options (short format):
     -b <verbose level number>: print more details of crawling.

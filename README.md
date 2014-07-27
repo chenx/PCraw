@@ -48,7 +48,7 @@ Parsing of HTML is done by PParse.pm. It extracts text (without tags) and stores
 Usage
 =====
 
-Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-bcdefghilmoprsuvw]
+Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-bcdefghilmnoprsuvw]
 <pre>
   Options (short format):  
     -b &lt;verbose level number>: print more details of crawling.
