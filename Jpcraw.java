@@ -19,7 +19,7 @@ import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Arrays;
-
+import java.util.regex.*;
 
 /**
  * Java wrapper for pcraw.pl.
@@ -64,10 +64,12 @@ class Jpcraw {
             ( new InputStreamReader(oProcess.getErrorStream()) );
 
         String sLine;
+        Pattern pattern = Pattern.compile("^\\|=*>.*"); // match: |=..=>
 
         // Dump stdout stream.
         while ((sLine = stdout.readLine()) != null) {
-            if (sLine.startsWith("|") ||
+            //if (sLine.startsWith("|") ||
+            if (pattern.matcher(sLine).matches() ||
                 sLine.startsWith("parsing links, please wait") ||
                 sLine.startsWith("wait for ")
             ) {
