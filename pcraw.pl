@@ -562,7 +562,7 @@ Usage: perl $0 $OPT_URL_START_S <url_start> [$OPT_URL_ROOT_S <url_root>] [-bcdef
   Examples:
     perl $0 -h
     perl $0 -r http://a.com 
-    perl $0 -u http://a.com/index.html
+    perl $0 -u http://a.com/index.html  (This is the recommended command)
     perl $0 -r http://a.com -u http://a.com/about.html
     perl $0 --url-root http://a.com 
     perl $0 --url-root http://a.com --url-start http://a.com/
