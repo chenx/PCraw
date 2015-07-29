@@ -134,7 +134,7 @@ Usage: perl pcraw.pl -u <url_start> [-r <url_root>] [-bcdefghilmnoprsuvw]
     // Start from default page under a.com, crawl all linked pages in a.com.
     perl pcraw.pl -r http://a.com   
 
-    // Start from index.html, crawl all linked pages in a.com.
+    // Start from index.html, crawl all linked pages in a.com.  (This is the recommended command)
     perl pcraw.pl -u http://a.com/index.html  
 
     // Start from about.html, crawl all linked pages in a.com.
